@@ -1,0 +1,12 @@
+@startuml
+!pragma layout smetana
+
+' 📁 Carpeta raíz de tu código Java
+!define PROJECT_PATH "src/main/java/com/oscar/healtry"
+
+!includepath PROJECT_PATH
+
+' 🧩 Incluye TODAS las clases Java dentro de com.oscar.healtry y subpaquetes
+!include com/oscar/healtry/**/*.java
+
+@enduml
