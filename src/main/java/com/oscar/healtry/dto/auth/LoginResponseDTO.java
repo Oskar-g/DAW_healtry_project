@@ -1,5 +1,8 @@
 package com.oscar.healtry.dto.auth;
 
+import com.oscar.healtry.model.Usuario;
+
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,5 +19,18 @@ public class LoginResponseDTO {
 	private String refreshToken;
 	private Integer idUsuario;
 	private String nombre;
+	private String apellidos;
+	private String correo;
 	private String rol;
+	
+	public static LoginResponseDTO de(@NotNull Usuario usuario) {
+		return LoginResponseDTO .builder()
+				.idUsuario(usuario.getIdUsuario())
+				.nombre(usuario.getNombre())
+				.apellidos(usuario.getApellidos())
+				.correo(usuario.getCorreo())
+				.rol(usuario.getRol().getNombre())
+				.build();
+		
+	}
 }
