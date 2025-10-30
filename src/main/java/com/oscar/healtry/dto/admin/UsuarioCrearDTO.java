@@ -14,7 +14,7 @@ import lombok.experimental.Accessors;
 @Data
 @Builder(toBuilder = true)
 @Accessors(chain = true)
-public class UsuarioCreateDTO {
+public class UsuarioCrearDTO {
     @NotBlank private String nombre;
     @NotBlank private String apellidos;
     @Email @NotBlank private String correo;

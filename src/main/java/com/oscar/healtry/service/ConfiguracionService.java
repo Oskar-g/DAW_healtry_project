@@ -6,7 +6,7 @@ import com.oscar.healtry.dto.admin.ConfiguracionCreateDTO;
 import com.oscar.healtry.dto.admin.ConfiguracionDTO;
 
 public interface ConfiguracionService {
-    ConfiguracionDTO guardarDTO(ConfiguracionCreateDTO dto);
+    ConfiguracionDTO guardar(ConfiguracionCreateDTO dto);
     void eliminarPorClave(String clave);
     ConfiguracionDTO obtenerPorClaveDTO(String clave);
     List<ConfiguracionDTO> listarTodasDTO();

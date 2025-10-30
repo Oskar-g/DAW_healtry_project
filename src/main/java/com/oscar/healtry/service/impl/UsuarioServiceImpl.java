@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.oscar.healtry.dto.admin.UsuarioCreateDTO;
+import com.oscar.healtry.dto.admin.UsuarioCrearDTO;
 import com.oscar.healtry.dto.admin.UsuarioDTO;
 import com.oscar.healtry.dto.admin.UsuarioUpdateDTO;
 import com.oscar.healtry.model.Rol;
@@ -21,129 +21,121 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class UsuarioServiceImpl implements UsuarioService {
 
-    private final UsuarioRepository usuarioRepository;
-    private final RolRepository rolRepository;
+	private final UsuarioRepository usuarioRepository;
+	private final RolRepository rolRepository;
 
-    @Override
-    public UsuarioDTO crearUsuarioDTO(UsuarioCreateDTO dto) {
-        log.debug("ENTRADA crearUsuarioDTO({})", dto);
+	@Override
+	public UsuarioDTO crearUsuarioDTO(UsuarioCrearDTO dto) {
+		log.debug("ENTRADA crearUsuarioDTO({})", dto);
 
-        Usuario usuario = mapCreateDtoToEntity(dto);
-        usuario = usuarioRepository.save(usuario);
+		Usuario usuario = mapToEntity(dto);
+		usuario = usuarioRepository.save(usuario);
 
-        UsuarioDTO response = mapEntityToDto(usuario);
-        log.debug("SALIDA crearUsuarioDTO -> {}", response);
-        return response;
-    }
+		UsuarioDTO response = mapToDto(usuario);
+		log.debug("SALIDA crearUsuarioDTO -> {}", response);
+		return response;
+	}
 
-    @Override
-    public UsuarioDTO actualizarUsuarioDTO(Integer id, UsuarioUpdateDTO dto) {
-        log.debug("ENTRADA actualizarUsuarioDTO(id={}, dto={})", id, dto);
+	@Override
+	public UsuarioDTO actualizarUsuarioDTO(Integer id, UsuarioUpdateDTO dto) {
+		log.debug("ENTRADA actualizarUsuarioDTO(id={}, dto={})", id, dto);
 
-        Usuario usuario = assertUser(id);
+		Usuario usuario = assertUser(id);
 
-        usuario.setNombre(dto.getNombre());
-        usuario.setApellidos(dto.getApellidos());
-        usuario.setCorreo(dto.getCorreo());
-        
-        if (dto.getContrasena() != null && !dto.getContrasena().isEmpty()) {
-        	usuario.setContrasena(dto.getContrasena());
-        }
-        
-        usuario = usuarioRepository.save(usuario);
+		usuario.setNombre(dto.getNombre());
+		usuario.setApellidos(dto.getApellidos());
+		usuario.setCorreo(dto.getCorreo());
 
-        UsuarioDTO response = mapEntityToDto(usuario);
-        log.debug("SALIDA actualizarUsuarioDTO -> {}", response);
-        return response;
-    }
+		if (dto.getContrasena() != null && !dto.getContrasena().isEmpty()) {
+			usuario.setContrasena(dto.getContrasena());
+		}
 
-    @Override
-    public UsuarioDTO cambiarEstadoDTO(Integer id, boolean activo) {
-        log.debug("ENTRADA cambiarEstadoDTO(id={}, activo={})", id, activo);
+		usuario = usuarioRepository.save(usuario);
 
-        Usuario usuario = assertUser(id);
+		UsuarioDTO response = mapToDto(usuario);
+		log.debug("SALIDA actualizarUsuarioDTO -> {}", response);
+		return response;
+	}
 
-        usuario.setActivo(activo);
-        usuario = usuarioRepository.save(usuario);
+	@Override
+	public UsuarioDTO cambiarEstadoDTO(Integer id, boolean activo) {
+		log.debug("ENTRADA cambiarEstadoDTO(id={}, activo={})", id, activo);
 
-        UsuarioDTO response = mapEntityToDto(usuario);
-        log.debug("SALIDA cambiarEstadoDTO -> {}", response);
-        return response;
-    }
+		Usuario usuario = assertUser(id);
 
-    @Override
-    public UsuarioDTO asignarRolDTO(Integer id, Integer idRol) {
-        log.debug("ENTRADA asignarRolDTO(id={}, idRol={})", id, idRol);
+		usuario.setActivo(activo);
+		usuario = usuarioRepository.save(usuario);
 
-        Usuario usuario = assertUser(id);
-        Rol rol = rolRepository.findById(idRol)
-                .orElseThrow(() -> new IllegalArgumentException("Rol no encontrado: " + idRol));
+		UsuarioDTO response = mapToDto(usuario);
+		log.debug("SALIDA cambiarEstadoDTO -> {}", response);
+		return response;
+	}
 
-        usuario.setRol(rol);
-        usuario = usuarioRepository.save(usuario);
+	@Override
+	public UsuarioDTO asignarRol(Integer id, Integer idRol) {
+		log.debug("ENTRADA asignarRol(id={}, idRol={})", id, idRol);
 
-        UsuarioDTO response = mapEntityToDto(usuario);
-        log.debug("SALIDA asignarRolDTO -> {}", response);
-        return response;
-    }
+		Usuario usuario = assertUser(id);
+		Rol rol = rolRepository.findById(idRol)
+				.orElseThrow(() -> new IllegalArgumentException("Rol no encontrado: " + idRol));
 
-    @Override
-    public UsuarioDTO buscarDTOPorId(Integer id) {
-        log.debug("ENTRADA buscarDTOPorId({})", id);
+		usuario.setRol(rol);
+		usuario = usuarioRepository.save(usuario);
 
-        Usuario usuario = assertUser(id);
+		UsuarioDTO response = mapToDto(usuario);
+		log.debug("SALIDA asignarRolDTO -> {}", response);
+		return response;
+	}
 
-        UsuarioDTO response = mapEntityToDto(usuario);
-        log.debug("SALIDA buscarDTOPorId -> {}", response);
-        return response;
-    }
+	@Override
+	public UsuarioDTO buscarPorId(Integer id) {
+		log.debug("ENTRADA buscarDTOPorId({})", id);
 
-    @Override
-    public List<UsuarioDTO> listarTodosDTO() {
-        log.debug("ENTRADA listarTodosDTO()");
+		Usuario usuario = assertUser(id);
 
-        List<UsuarioDTO> lista = usuarioRepository.findAll().stream()
-                .map(this::mapEntityToDto)
-                .toList();
+		UsuarioDTO response = mapToDto(usuario);
+		log.debug("SALIDA buscarDTOPorId -> {}", response);
+		return response;
+	}
 
-        log.debug("SALIDA listarTodosDTO -> {}", lista);
-        return lista;
-    }
+	@Override
+	public List<UsuarioDTO> listarTodos() {
+		log.debug("ENTRADA listarTodosDTO()");
 
-    
+		List<UsuarioDTO> lista = usuarioRepository.findAll().stream().map(this::mapToDto).toList();
+
+		log.debug("SALIDA listarTodosDTO -> {}", lista);
+		return lista;
+	}
+
 	private Usuario assertUser(Integer id) {
 		return usuarioRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado: " + id));
+				.orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado: " + id));
 	}
-	
-    // =========================
-    // Métodos de mapeo manual con builder
-    // =========================
 
-    private Usuario mapCreateDtoToEntity(UsuarioCreateDTO dto) {
-        Rol rol = null;
-        if (dto.getIdRol() != null) {
-            // TODO: obtener rol real desde rolRepository
-            rol = Rol.builder().idRol(dto.getIdRol()).build();
-        }
+	// =========================
+	// Mapeo
+	// =========================
 
-        return Usuario.builder()
-                .nombre(dto.getNombre())
-                .apellidos(dto.getApellidos())
-                .correo(dto.getCorreo())
-                .contrasena(dto.getContrasena())
-                .rol(rol)
-                .activo(true)
-                .build();
-    }
+	private Usuario mapToEntity(UsuarioCrearDTO dto) {
+		Rol rol = dto.getIdRol() != null ? Rol.builder().idRol(dto.getIdRol()).build() : null;
+		return Usuario.builder()
+				.nombre(dto.getNombre())
+				.apellidos(dto.getApellidos())
+				.correo(dto.getCorreo())
+				.contrasena(dto.getContrasena())
+				.rol(rol)
+				.activo(true)
+				.build();
+	}
 
-    private UsuarioDTO mapEntityToDto(Usuario entity) {
-        return UsuarioDTO.builder()
-                .idUsuario(entity.getIdUsuario())
-                .nombre(entity.getNombre())
-                .correo(entity.getCorreo())
-                .rol(entity.getRol() != null ? entity.getRol().getNombre() : null) // nombre del rol
-                .activo(entity.getActivo())
-                .build();
-    }
+	private UsuarioDTO mapToDto(Usuario entity) {
+		return UsuarioDTO.builder()
+				.idUsuario(entity.getIdUsuario())
+				.nombre(entity.getNombre())
+				.correo(entity.getCorreo())
+				.rol(entity.getRol() != null ? entity.getRol().getNombre() : null)
+				.activo(entity.getActivo())
+				.build();
+	}
 }

@@ -1,13 +1,18 @@
 package com.oscar.healtry.service.impl;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 import org.springframework.stereotype.Service;
 
 import com.oscar.healtry.dto.auth.ConfirmarRecuperacionDTO;
 import com.oscar.healtry.dto.auth.LoginRequestDTO;
 import com.oscar.healtry.dto.auth.LoginResponseDTO;
+import com.oscar.healtry.exception.ExcepcionGeneral;
 import com.oscar.healtry.model.Usuario;
 import com.oscar.healtry.repository.UsuarioRepository;
 import com.oscar.healtry.service.AuthService;
+import com.oscar.healtry.util.RandomString;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +23,8 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
 
+	
+	private Map<String, String> codigosResetPassword = new ConcurrentHashMap<>();
 	private final UsuarioRepository usuarioRepository;
 
 	@Override
@@ -43,19 +50,26 @@ public class AuthServiceImpl implements AuthService {
 	}
 
 	@Override
-	public void enviarCodigoRecuperacion(String correo) {
-		log.debug("ENTRADA enviarCodigoRecuperacion({})", correo);
-
-		// TODO: generar código y enviarlo por correo
-
-		log.debug("SALIDA enviarCodigoRecuperacion");
+	public String generarCodigoRecuperacionPassword(String correo) {
+		log.debug("ENTRADA generarCodigoRecuperacionPassword({})", correo);
+		
+		String codigo = RandomString.generarCodigo();
+		codigosResetPassword.put(correo, codigo);
+		log.debug("SALIDA generarCodigoRecuperacionPassword: {}", codigo);
+		return codigo;
 	}
 
 	@Override
 	public void confirmarCodigoYRestablecer(ConfirmarRecuperacionDTO request) {
 		log.debug("ENTRADA confirmarCodigoYRestablecer({})", request);
 
-		// TODO: validar código y actualizar contraseña
+		String correo = request.getCorreo();
+		String codigo = request.getCodigo();
+		String codigoAsignado = codigosResetPassword.get(correo);
+		
+		if (!codigo.equals(codigoAsignado)) {
+			throw ExcepcionGeneral.de("El código introducido no es válido");
+		}
 
 		log.debug("SALIDA confirmarCodigoYRestablecer");
 	}

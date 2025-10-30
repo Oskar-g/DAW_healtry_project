@@ -1,9 +1,12 @@
 package com.oscar.healtry.controller;
 
+import java.util.stream.Collectors;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -22,6 +25,8 @@ import com.oscar.healtry.service.AuthService;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
+import jakarta.xml.bind.DataBindingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -29,7 +34,7 @@ import lombok.extern.slf4j.Slf4j;
 @Controller
 @RequestMapping("/auth")
 @RequiredArgsConstructor
-@Validated
+//@Validated
 public class AuthController {
 
 	private final AuthService authService;
@@ -40,26 +45,31 @@ public class AuthController {
 		return "login";
 	}
 
-	/**
-	 * Inicia sesión con correo y contraseña.
-	 */
-//	@PostMapping("/login")
-//	public ResponseEntity<LoginResponseDTO> login(@RequestBody @Validated LoginRequestDTO request) {
-//		return ResponseEntity.ok(authService.login(request));
-//	}
-
 	@PostMapping("/login")
-	public String procesarLogin(@ModelAttribute LoginRequestDTO request, Model model, HttpSession session) {
+	public String procesarLogin(@ModelAttribute @Valid LoginRequestDTO request, BindingResult bindingResult,
+			Model model, HttpSession session) {
 		log.debug("ENTRADA procesarLogin({})", request);
 
-		model.addAttribute("usuario", request);
 		try {
+			model.addAttribute("usuario", request);
+
+			if (bindingResult.hasErrors()) {
+				// TODO Aquí ya veré como gestiono los errores cuando lo maneje todo por REST
+				String errors = bindingResult.getFieldErrors().stream()
+						.map(e -> String.format("%s: %s", e.getField(), e.getDefaultMessage()))
+						.collect(Collectors.joining(","));
+
+				log.debug("Errores de validación: {}", errors);
+				throw new DataBindingException(errors, null);
+			}
+
+
 			LoginResponseDTO response = authService.login(request);
 			session.setAttribute("usuarioLogueado", response);
 			log.debug("SALIDA procesarLogin({}) -> {}", request, response);
 			return "redirect:/";
 
-		} catch (EntityNotFoundException e) {
+		} catch (DataBindingException | EntityNotFoundException e) {
 			log.debug("SALIDA procesarLogin -> error de autenticación");
 			model.addAttribute("error", e.getMessage());
 			return "login";
@@ -89,7 +99,7 @@ public class AuthController {
 	@PostMapping("/recuperar")
 	@ResponseStatus(HttpStatus.OK)
 	public void solicitarRecuperacion(@RequestBody @Validated RecuperarPasswordRequestDTO request) {
-		authService.enviarCodigoRecuperacion(request.getCorreo());
+		authService.generarCodigoRecuperacionPassword(request.getCorreo());
 	}
 
 	/**

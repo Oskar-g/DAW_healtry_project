@@ -2,10 +2,12 @@ package com.oscar.healtry.service.impl;
 
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.oscar.healtry.dto.admin.ConfiguracionCreateDTO;
 import com.oscar.healtry.dto.admin.ConfiguracionDTO;
+import com.oscar.healtry.exception.ExcepcionGeneral;
 import com.oscar.healtry.model.Configuracion;
 import com.oscar.healtry.repository.ConfiguracionRepository;
 import com.oscar.healtry.service.ConfiguracionService;
@@ -21,7 +23,7 @@ public class ConfiguracionServiceImpl implements ConfiguracionService {
 	private final ConfiguracionRepository configuracionRepository;
 
 	@Override
-	public ConfiguracionDTO guardarDTO(ConfiguracionCreateDTO dto) {
+	public ConfiguracionDTO guardar(ConfiguracionCreateDTO dto) {
 		log.debug("ENTRADA guardarDTO({})", dto);
 
 		Configuracion configuracion = mapCreateDtoToEntity(dto);
@@ -46,7 +48,7 @@ public class ConfiguracionServiceImpl implements ConfiguracionService {
 		log.debug("ENTRADA obtenerPorClaveDTO({})", clave);
 
 		Configuracion configuracion = configuracionRepository.findById(clave)
-				.orElseThrow(() -> new IllegalArgumentException("Configuración no encontrada: " + clave));
+				.orElseThrow(() -> ExcepcionGeneral.of(HttpStatus.NOT_FOUND, "Configuración no encontrada {0}", clave));
 
 		ConfiguracionDTO response = mapEntityToDto(configuracion);
 		log.debug("SALIDA obtenerPorClaveDTO -> {}", response);
@@ -57,9 +59,7 @@ public class ConfiguracionServiceImpl implements ConfiguracionService {
 	public List<ConfiguracionDTO> listarTodasDTO() {
 		log.debug("ENTRADA listarTodasDTO()");
 
-		List<ConfiguracionDTO> lista = configuracionRepository.findAll().stream()
-				.map(this::mapEntityToDto)
-				.toList();
+		List<ConfiguracionDTO> lista = configuracionRepository.findAll().stream().map(this::mapEntityToDto).toList();
 
 		log.debug("SALIDA listarTodasDTO -> {}", lista);
 		return lista;
@@ -79,11 +79,11 @@ public class ConfiguracionServiceImpl implements ConfiguracionService {
 	}
 
 	private ConfiguracionDTO mapEntityToDto(Configuracion entity) {
-        return ConfiguracionDTO.builder()
-        .clave(entity.getClave())
-        .valor(entity.getValor())
-        .tipo(entity.getTipo())
-        .descripcion(entity.getDescripcion())
-        .build();
-    }
+		return ConfiguracionDTO.builder()
+				.clave(entity.getClave())
+				.valor(entity.getValor())
+				.tipo(entity.getTipo())
+				.descripcion(entity.getDescripcion())
+				.build();
+	}
 }

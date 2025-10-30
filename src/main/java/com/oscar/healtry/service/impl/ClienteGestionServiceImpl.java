@@ -70,7 +70,8 @@ public class ClienteGestionServiceImpl implements ClienteGestionService {
 		log.debug("ENTRADA listarClientesPorNutricionista({})", nutricionistaId);
 
 		// TODO: Filtrar por nutricionista si la relación existe
-		List<ClienteResumenDTO> clientes = clienteRepository.findAll().stream().map(this::mapEntityToResumenDto)
+		List<ClienteResumenDTO> clientes = clienteRepository.findAll().stream()
+				.map(this::mapEntityToResumenDto)
 				.toList();
 
 		log.debug("SALIDA listarClientesPorNutricionista -> {}", clientes);

@@ -5,10 +5,12 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,6 +19,7 @@ import com.oscar.healtry.dto.admin.ConfiguracionCreateDTO;
 import com.oscar.healtry.dto.admin.ConfiguracionDTO;
 import com.oscar.healtry.service.ConfiguracionService;
 
+import jakarta.annotation.security.RolesAllowed;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -26,26 +29,40 @@ public class ConfiguracionController {
 
 	private final ConfiguracionService configuracionService;
 
-	/** Listar todas las configuraciones */
+
+//	@CrossOrigin("*")
+//	@RolesAllowed(value = {"ADMIN"})
 	@GetMapping("/admin/configuraciones")
 	public ResponseEntity<List<ConfiguracionDTO>> listarConfiguraciones() {
-		return ResponseEntity.ok(configuracionService.listarTodasDTO());
+		List<ConfiguracionDTO> resultado = configuracionService.listarTodasDTO();
+		return ResponseEntity.ok(resultado);
 	}
 
-	/** Obtener una configuración por clave */
+	@CrossOrigin("*")
 	@GetMapping("/admin/configuraciones/{clave}")
 	public ResponseEntity<ConfiguracionDTO> obtenerConfiguracion(@PathVariable String clave) {
-		return ResponseEntity.ok(configuracionService.obtenerPorClaveDTO(clave));
+		ConfiguracionDTO resultado = configuracionService.obtenerPorClaveDTO(clave);
+		return ResponseEntity.ok(resultado);
 	}
 
-	/** Crear o actualizar configuración */
+	@CrossOrigin("*")
 	@PostMapping("/admin/configuraciones")
 	@ResponseStatus(HttpStatus.CREATED)
-	public ConfiguracionDTO guardarConfiguracion(@RequestBody @Validated ConfiguracionCreateDTO request) {
-		return configuracionService.guardarDTO(request);
+	public ResponseEntity<ConfiguracionDTO> guardarConfiguracion(@RequestBody @Validated ConfiguracionCreateDTO request) {
+		ConfiguracionDTO resultado = configuracionService.guardar(request);
+		return ResponseEntity.status(HttpStatus.CREATED).body(resultado);
 	}
 
-	/** Eliminar configuración */
+	@CrossOrigin("*")
+	@PutMapping("/admin/configuraciones")
+	@ResponseStatus(HttpStatus.OK)
+	public ResponseEntity<ConfiguracionDTO> editarConfiguracion(@RequestBody @Validated ConfiguracionCreateDTO request) {
+		ConfiguracionDTO resultado = configuracionService.guardar(request);
+		return ResponseEntity.ok(resultado);
+	}
+
+	
+	@CrossOrigin("*")
 	@DeleteMapping("/admin/configuraciones/{clave}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void eliminarConfiguracion(@PathVariable String clave) {

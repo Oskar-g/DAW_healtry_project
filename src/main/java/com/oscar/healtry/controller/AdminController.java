@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.oscar.healtry.dto.admin.AsignarRolDTO;
-import com.oscar.healtry.dto.admin.UsuarioCreateDTO;
+import com.oscar.healtry.dto.admin.UsuarioCrearDTO;
 import com.oscar.healtry.dto.admin.UsuarioDTO;
 import com.oscar.healtry.dto.admin.UsuarioUpdateDTO;
 import com.oscar.healtry.service.UsuarioService;
@@ -35,19 +35,19 @@ public class AdminController {
 	/** Listar todos los usuarios */
 	@GetMapping("/usuarios")
 	public ResponseEntity<List<UsuarioDTO>> listarUsuarios() {
-		return ResponseEntity.ok(usuarioService.listarTodosDTO());
+		return ResponseEntity.ok(usuarioService.listarTodos());
 	}
 
 	/** Obtener usuario por ID */
 	@GetMapping("/usuarios/{id}")
 	public ResponseEntity<UsuarioDTO> obtenerUsuario(@PathVariable Integer id) {
-		return ResponseEntity.ok(usuarioService.buscarDTOPorId(id));
+		return ResponseEntity.ok(usuarioService.buscarPorId(id));
 	}
 
 	/** Crear nuevo usuario */
 	@PostMapping("/usuarios")
 	@ResponseStatus(HttpStatus.CREATED)
-	public UsuarioDTO crearUsuario(@RequestBody @Validated UsuarioCreateDTO request) {
+	public UsuarioDTO crearUsuario(@RequestBody @Validated UsuarioCrearDTO request) {
 		return usuarioService.crearUsuarioDTO(request);
 	}
 
@@ -66,6 +66,6 @@ public class AdminController {
 	/** Asignar rol a usuario */
 	@PatchMapping("/usuarios/{id}/rol")
 	public UsuarioDTO asignarRol(@PathVariable Integer id, @RequestBody @Validated AsignarRolDTO request) {
-		return usuarioService.asignarRolDTO(id, request.getIdRol());
+		return usuarioService.asignarRol(id, request.getIdRol());
 	}
 }
