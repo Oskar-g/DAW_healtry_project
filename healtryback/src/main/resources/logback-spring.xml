@@ -1,0 +1,23 @@
+<configuration>
+	<include
+		resource="org/springframework/boot/logging/logback/base.xml" />
+
+	<property name="APP" value="healtry-back" />
+	<property name="LOGS" value="./logs" />
+
+	<!-- Trazas del actuator -->
+	<logger
+		name="org.springframework.web.servlet.mvc.method.annotation"
+		level="INFO" />
+	<logger name="org.springframework" level="INFO" />
+	<logger name="javax.persistence" level="INFO" />
+	<logger name="com.oscar" level="DEBUG" />
+
+	<root level="error">
+		<appender-ref ref="FILE-ROLLING" />
+	</root>
+
+	<root level="info">
+		<appender-ref ref="FILE-ROLLING" />
+	</root>
+</configuration>  

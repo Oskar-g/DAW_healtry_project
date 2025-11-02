@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+
+<script th:src="@{/js/index.js}"></script>
+<head th:replace="~{fragments/general :: head(title=${title})}">
+</head>
+
+<body>
+	<!-- Barra superior -->
+	<div class="row">	<div th:replace="~{fragments/general :: navbar}"></div></div>
+
+	<!-- Contenedor principal: sidebar + contenido -->
+	<div class="d-flex">
+		<!-- Sidebar -->
+		
+		<div th:if="${sidebar}=='admin'"> <div th:replace="~{fragments/general :: admin-sidebar}"></div></div>
+		<div th:if="${sidebar}=='nutri'"> <div th:replace="~{fragments/general :: nutri-sidebar}"></div></div>
+		<div th:if="${sidebar}=='user'"> <div th:replace="~{fragments/general :: user-sidebar}"></div></div>
+
+		<!-- Contenido -->
+		<main class="flex-grow-1 p-4">
+    		<div layout:fragment="contenido"></div>
+		</main>
+	</div>
+
+	<!-- Toasts -->
+	<div th:replace="~{fragments/general.html :: toast}"></div>
+</body>
+</html>
