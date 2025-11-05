@@ -56,10 +56,26 @@ function usuariosApp() {
 							: "Usuario creado con éxito"
 					);
 				},
-				(err) => mostrarToast(err.message, true)
+				(err) => mostrarToast(err.message, true),
+				() => this.cargarUsuarios(),
 			);
 		},
-		
+
+		eliminarUsuario() {
+			apiSend(
+				{
+					url: `${baseUrl}/admin/usuarios/${this.usuario.id}`,
+					method: "DELETE",
+				},
+				async (res) => {
+					this.modalEliminar.hide();
+					mostrarToast("Usuario eliminado correctamente");
+				},
+				(err) => mostrarToast(err.message, true),
+				() => this.cargarUsuarios(),
+			);
+		},
+
 		toggleActivo(u) {
 			const nuevoEstado = !u.activo;
 			apiSend(
@@ -76,22 +92,8 @@ function usuariosApp() {
 							: "Usuario desactivado correctamente"
 					);
 				},
-				(err) => mostrarToast(err.message, true)
-			);
-		},
-
-		eliminarUsuario() {
-			apiSend(
-				{
-					url: `${baseUrl}/admin/usuarios/${this.usuario.id}`,
-					method: "DELETE",
-				},
-				async (res) => {
-					this.cargarUsuarios();
-					this.modalEliminar.hide();
-					mostrarToast("Usuario eliminado correctamente");
-				},
-				(err) => mostrarToast(err.message, true)
+				(err) => mostrarToast(err.message, true),
+				this.cargarUsuarios,
 			);
 		},
 
@@ -103,7 +105,7 @@ function usuariosApp() {
 			this.usuario = JSON.parse(JSON.stringify(usuarioVacio));
 			this.modoEdicion = false;
 			this.modalUsuario = new bootstrap.Modal(
-				document.getElementById("modalUsuario")
+				document.getElementById("modalGuardarUsuario")
 			);
 			this.modalUsuario.show();
 		},
@@ -112,7 +114,7 @@ function usuariosApp() {
 			this.usuario = JSON.parse(JSON.stringify(u));
 			this.modoEdicion = true;
 			this.modalUsuario = new bootstrap.Modal(
-				document.getElementById("modalUsuario")
+				document.getElementById("modalGuardarUsuario")
 			);
 			this.modalUsuario.show();
 		},
@@ -120,7 +122,7 @@ function usuariosApp() {
 		confirmarEliminar(u) {
 			this.usuario = JSON.parse(JSON.stringify(u));
 			this.modalEliminar = new bootstrap.Modal(
-				document.getElementById("modalEliminar")
+				document.getElementById("modalEliminarUsuario")
 			);
 			this.modalEliminar.show();
 		},

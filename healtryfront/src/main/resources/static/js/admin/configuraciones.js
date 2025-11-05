@@ -9,12 +9,16 @@ function parametrosApp() {
 		parametros: [],
 		parametro: parametroVacio,
 		modoEdicion: false,
-		modalParametro: null,
+		modalGuardar: null,
 		modalEliminar: null,
 
 		// ---------------------------------------
 		// REST
 		// ---------------------------------------
+
+		init() {
+			this.cargarParametros();
+		},
 
 		cargarParametros() {
 			apiSend(
@@ -22,7 +26,7 @@ function parametrosApp() {
 					url: `${baseUrl}/admin/configuraciones`,
 				},
 				async res => this.parametros = await res.json(),
-				err => mostrarToast(err.message, true)
+				err => mostrarToast(err.message, true),
 			);
 		},
 
@@ -34,15 +38,15 @@ function parametrosApp() {
 					body: JSON.stringify(this.parametro),
 				},
 				async res => {
-					this.cargarParametros();
-					this.modalParametro.hide();
+					this.modalGuardar.hide();
 					mostrarToast(
 						this.modoEdicion
 							? "Parámetro actualizado correctamente"
 							: "Parámetro creado con éxito"
 					);
 				},
-				err => mostrarToast(err.message, true)
+				err => mostrarToast(err.message, true),
+				() => this.cargarParametros(),
 			);
 		},
 
@@ -54,10 +58,11 @@ function parametrosApp() {
 				},
 				async res => {
 					this.cargarParametros();
-					this.modalParametro.hide();
+					this.modalEliminar.hide();
 					mostrarToast("Parámetro eliminado correctamente");
 				},
-				err => mostrarToast(err.message, true)
+				err => mostrarToast(err.message, true),
+				() => this.cargarParametros(),
 			)
 		},
 
@@ -68,25 +73,25 @@ function parametrosApp() {
 		abrirModalNuevo() {
 			this.parametro = parametroVacio;
 			this.modoEdicion = false;
-			this.modalParametro = new bootstrap.Modal(
-				document.getElementById("modalParametro")
+			this.modalGuardar = new bootstrap.Modal(
+				document.getElementById("modalGuardarConfig")
 			);
-			this.modalParametro.show();
+			this.modalGuardar.show();
 		},
 
 		abrirModalEditar(p) {
 			this.parametro = { ...p };
 			this.modoEdicion = true;
-			this.modalParametro = new bootstrap.Modal(
-				document.getElementById("modalParametro")
+			this.modalGuardar = new bootstrap.Modal(
+				document.getElementById("modalGuardarConfig")
 			);
-			this.modalParametro.show();
+			this.modalGuardar.show();
 		},
 
 		confirmarEliminar(p) {
 			this.parametro = { ...p };
 			this.modalEliminar = new bootstrap.Modal(
-				document.getElementById("modalEliminar")
+				document.getElementById("modalEliminarConfig")
 			);
 			this.modalEliminar.show();
 		},

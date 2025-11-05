@@ -1,5 +1,5 @@
 
-async function apiSend(info, onSuccess, onError) {
+async function apiSend(info, onSuccess, onError, finalmente) {
 	try {
 		const res = await fetch(
 			info.url,
@@ -9,11 +9,16 @@ async function apiSend(info, onSuccess, onError) {
 				...info
 			}
 		);
-
 		onSuccess(res, info);
 
 	} catch (err) {
 		console.error(err);
-		onError(err, info)
+		if (onError) {
+			onError(err, info)
+		}
+	}
+
+	if (finalmente) {
+		finalmente();
 	}
 }

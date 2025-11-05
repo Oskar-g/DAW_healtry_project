@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -43,7 +42,7 @@ public class AdminController {
 			RequestMethod.POST, RequestMethod.PUT
 	})
 	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<UsuarioDTO> crearUsuario(@RequestBody @Validated UsuarioDTO request) {
+	public ResponseEntity<UsuarioDTO> crearUsuario(@RequestBody UsuarioDTO request) {
 		UsuarioDTO resultado = usuarioService.guardar(request);
 		return ResponseEntity.status(HttpStatus.CREATED).body(resultado);
 	}

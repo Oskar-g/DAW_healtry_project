@@ -25,6 +25,7 @@ public interface UsuarioService {
 	public static Usuario mapToEntity(UsuarioDTO dto) {
 		Rol rol = dto.getRol() != null ? RolService.mapToEntity(dto.getRol()) : null;
 		return Usuario.builder()
+				.id(dto.getId())
 				.nombre(dto.getNombre())
 				.apellidos(dto.getApellidos())
 				.correo(dto.getCorreo())
