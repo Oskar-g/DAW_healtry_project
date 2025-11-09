@@ -3,11 +3,11 @@ package com.oscar.healtry.model;
 import java.math.BigDecimal;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.IdClass;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.MapsId;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,25 +16,27 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 @Entity
-@Table(name = "comidas_ingredientes")
+@Table(name = "comidas_alimentos")
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 @Builder(toBuilder = true)
 @Accessors(chain = true)
-@IdClass(ComidaIngredienteId.class)
-public class ComidaIngrediente {
+public class ComidaAlimento {
 
-	@Id
+	@EmbeddedId
+	private ComidaAlimentoId id;
+
 	@ManyToOne
-	@JoinColumn(name = "id_comida")
+	@MapsId("comidaId")
+	@JoinColumn(name = "comida_id")
 	private Comida comida;
 
-	@Id
 	@ManyToOne
-	@JoinColumn(name = "id_ingrediente")
-	private Ingrediente ingrediente;
+	@MapsId("alimentoId")
+	@JoinColumn(name = "alimento_id")
+	private Alimento alimento;
 
-	@Column(precision = 6, scale = 2)
-	private BigDecimal cantidad;
+	@Column(nullable = false, precision = 8, scale = 2)
+	private BigDecimal gramos;
 }

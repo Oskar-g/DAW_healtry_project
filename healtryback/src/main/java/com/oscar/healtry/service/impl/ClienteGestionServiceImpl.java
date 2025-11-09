@@ -92,14 +92,14 @@ public class ClienteGestionServiceImpl implements ClienteGestionService {
 		return cliente;
 	}
 
-	private ClienteDTO mapEntityToDto(Cliente entity) {
-		Usuario usuario = entity.getUsuario();
-		return ClienteDTO.builder().id(entity.getId() != null ? entity.getId().longValue() : null)
+	private ClienteDTO mapEntityToDto(Cliente entidad) {
+		Usuario usuario = entidad.getUsuario();
+		return ClienteDTO.builder().id(entidad.getId() != null ? entidad.getId().longValue() : null)
 				.nombre(usuario.getNombre()).apellido(usuario.getApellidos()).email(usuario.getCorreo())
-				.altura(entity.getAlturaCm() != null ? entity.getAlturaCm().doubleValue() : null)
-				.peso(entity.getPesoKg() != null ? entity.getPesoKg().doubleValue() : null)
-				.edad(entity.getFechaNacimiento() != null
-						? LocalDate.now().getYear() - entity.getFechaNacimiento().getYear()
+				.altura(entidad.getAlturaCm() != null ? entidad.getAlturaCm().doubleValue() : null)
+				.peso(entidad.getPesoKg() != null ? entidad.getPesoKg().doubleValue() : null)
+				.edad(entidad.getFechaNacimiento() != null
+						? LocalDate.now().getYear() - entidad.getFechaNacimiento().getYear()
 						: null)
 				.build();
 	}

@@ -1,0 +1,30 @@
+.btn-card {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 1.2rem;
+      border: 1px solid #dee2e6;
+      border-radius: 0.75rem;
+      background-color: #f8f9fa;
+      transition: all 0.2s ease;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .btn-card:hover {
+      background-color: #dcffdc; 
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      text-decoration: none;
+    }
+
+    .btn-card img {
+      width: 48px;
+      height: 48px;
+      object-fit: contain;
+      margin-right: 1rem;
+    }
+
+    .btn-card span {
+      font-size: 1.2rem;
+      font-weight: 500;
+    }

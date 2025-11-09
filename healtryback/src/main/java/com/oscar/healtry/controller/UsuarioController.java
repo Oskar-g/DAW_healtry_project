@@ -15,54 +15,44 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.oscar.healtry.dto.admin.RolDTO;
 import com.oscar.healtry.dto.admin.UsuarioDTO;
-import com.oscar.healtry.service.RolService;
 import com.oscar.healtry.service.UsuarioService;
 
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/admin")
+@RequestMapping("/usuarios")
 @RequiredArgsConstructor
 @Validated
-public class AdminController {
+public class UsuarioController {
 
 	private final UsuarioService usuarioService;
-	private final RolService rolService;
-
-	/** Listar todos los usuarios */
-	@GetMapping("/usuarios")
-	public ResponseEntity<List<UsuarioDTO>> listarUsuarios() {
-		return ResponseEntity.ok(usuarioService.listarTodos());
-	}
 
 	/** Crear o editar usuario */
-	@RequestMapping(value = "/usuarios", method = {
+	@RequestMapping(method = {
 			RequestMethod.POST, RequestMethod.PUT
 	})
 	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<UsuarioDTO> crearUsuario(@RequestBody UsuarioDTO request) {
+	public ResponseEntity<UsuarioDTO> crear(@RequestBody UsuarioDTO request) {
 		UsuarioDTO resultado = usuarioService.guardar(request);
 		return ResponseEntity.status(HttpStatus.CREATED).body(resultado);
 	}
 
+	@GetMapping
+	public ResponseEntity<List<UsuarioDTO>> listar() {
+		return ResponseEntity.ok(usuarioService.listarTodos());
+	}
+
 	/** parchear usuario */
 	@PatchMapping("/usuarios/{id}")
-	public ResponseEntity<UsuarioDTO> parchearUsuario(@PathVariable Integer id, @RequestBody UsuarioDTO usuario) {
+	public ResponseEntity<UsuarioDTO> parchear(@PathVariable Integer id, @RequestBody UsuarioDTO usuario) {
 		UsuarioDTO resultado = usuarioService.parchear(id, usuario);
 		return ResponseEntity.ok(resultado);
 	}
 
-	/** Listar todos los roles */
-	@GetMapping("/roles")
-	public ResponseEntity<List<RolDTO>> listarRoles() {
-		return ResponseEntity.ok(rolService.listarTodos());
-	}
-
 	@DeleteMapping("/usuarios/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void eliminarUsuario(@PathVariable Integer id) {
+	public void eliminar(@PathVariable Integer id) {
 		usuarioService.eliminar(id);
 	}
 }

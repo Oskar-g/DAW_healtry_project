@@ -1,10 +1,12 @@
 package com.oscar.healtry.dto.dieta;
 
-import java.time.DayOfWeek;
-import java.time.LocalTime;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,14 +19,21 @@ import lombok.experimental.Accessors;
 @Builder(toBuilder = true)
 @Accessors(chain = true)
 public class ComidaDTO {
-	private Long id;
+
+	private Integer id;
 
 	@NotBlank
 	private String nombre;
 
-	private DayOfWeek diaSemana;
-	@NotNull
-	private LocalTime horaDia;
+	@NotEmpty
+	@Builder.Default
+	private List<ComidaAlimentoDTO> alimentos = new ArrayList<>();
 
-	private Long dietaId; // Dieta a la que pertenece
+	public BigDecimal getKcal() {
+		return alimentos.stream()
+				.filter(Objects::nonNull)
+				.map(ComidaAlimentoDTO::getKcal)
+				.reduce(BigDecimal.ZERO, BigDecimal::add);
+	}
+
 }

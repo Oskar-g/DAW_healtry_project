@@ -1,12 +1,17 @@
 package com.oscar.healtry.model;
 
-import java.math.BigDecimal;
+import java.time.DayOfWeek;
+import java.time.LocalTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,24 +20,29 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 @Entity
-@Table(name = "ingredientes")
+@Table(name = "comidas")
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 @Builder(toBuilder = true)
 @Accessors(chain = true)
-public class Ingrediente {
+public class ComidaDieta {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	private Integer id;
 
-	@Column(nullable = false, length = 100)
+	@ManyToOne
+	@JoinColumn(name = "id_dieta", nullable = false)
+	private Dieta dieta;
+
+	@Column(length = 100)
 	private String nombre;
 
-	@Column(name = "calorias_por_racion", precision = 6, scale = 2)
-	private BigDecimal caloriasPorRacion;
+    @Enumerated(EnumType.STRING)
+	@Column(name = "dia_semana", length = 15)
+	private DayOfWeek diaSemana;
 
-	@Column(name = "gramos_por_racion", precision = 6, scale = 2)
-	private BigDecimal gramosPorRacion;
+	@Column
+	private LocalTime hora;
 }

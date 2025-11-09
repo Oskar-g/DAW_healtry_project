@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,19 +30,19 @@ public class ConfiguracionController {
 	// TODO mirar si usar token para gestionar roles o hacer un filter o si hago
 	// chequeo manual de rol de acceso
 //	@RolesAllowed(value = {"ADMIN"})
-	@GetMapping("/admin/configuraciones")
+	@GetMapping("/configuraciones")
 	public ResponseEntity<List<ConfiguracionDTO>> listarConfiguraciones() {
 		List<ConfiguracionDTO> resultado = configuracionService.listarTodasDTO();
 		return ResponseEntity.ok(resultado);
 	}
 
-	@GetMapping("/admin/configuraciones/{clave}")
+	@GetMapping("/configuraciones/{clave}")
 	public ResponseEntity<ConfiguracionDTO> obtenerConfiguracion(@PathVariable String clave) {
 		ConfiguracionDTO resultado = configuracionService.obtenerPorClaveDTO(clave);
 		return ResponseEntity.ok(resultado);
 	}
 
-	@PostMapping("/admin/configuraciones")
+	@PostMapping("/configuraciones")
 	@ResponseStatus(HttpStatus.CREATED)
 	public ResponseEntity<ConfiguracionDTO> guardarConfiguracion(
 			@RequestBody @Validated ConfiguracionCreateDTO request) {
@@ -51,7 +50,7 @@ public class ConfiguracionController {
 		return ResponseEntity.status(HttpStatus.CREATED).body(resultado);
 	}
 
-	@PutMapping("/admin/configuraciones")
+	@PutMapping("/configuraciones")
 	@ResponseStatus(HttpStatus.OK)
 	public ResponseEntity<ConfiguracionDTO> editarConfiguracion(
 			@RequestBody @Validated ConfiguracionCreateDTO request) {
@@ -59,7 +58,7 @@ public class ConfiguracionController {
 		return ResponseEntity.ok(resultado);
 	}
 
-	@DeleteMapping("/admin/configuraciones/{clave}")
+	@DeleteMapping("/configuraciones/{clave}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void eliminarConfiguracion(@PathVariable String clave) {
 		configuracionService.eliminarPorClave(clave);

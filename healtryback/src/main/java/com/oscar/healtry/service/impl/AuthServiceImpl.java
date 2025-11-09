@@ -10,7 +10,6 @@ import com.oscar.healtry.dto.auth.ConfirmarRecuperacionDTO;
 import com.oscar.healtry.dto.auth.LoginRequestDTO;
 import com.oscar.healtry.dto.auth.LoginResponseDTO;
 import com.oscar.healtry.exception.ExcepcionGeneral;
-import com.oscar.healtry.model.Usuario;
 import com.oscar.healtry.repository.UsuarioRepository;
 import com.oscar.healtry.service.AuthService;
 import com.oscar.healtry.util.RandomString;

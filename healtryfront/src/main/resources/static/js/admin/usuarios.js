@@ -9,23 +9,23 @@ function usuariosApp() {
 	return {
 		usuarios: [],
 		roles: [],
-		usuario: usuarioVacio,
+		usuario: { ...usuarioVacio },
 		modoEdicion: false,
-		modalUsuario: null,
-		modalEliminar: null,
-
-		// ---------------------------------------
-		// REST
-		// ---------------------------------------
+		modalUsuario: new bootstrap.Modal(document.getElementById("modalGuardarUsuario")),
+		modalEliminar: new bootstrap.Modal(document.getElementById("modalEliminarUsuario")),
 
 		init() {
 			this.cargarRoles();
 			this.cargarUsuarios();
 		},
 
+		// ---------------------------------------
+		// REST
+		// ---------------------------------------
+
 		cargarUsuarios() {
 			apiSend(
-				{ url: `${baseUrl}/admin/usuarios` },
+				{ url: `${apiUrl}/usuarios` },
 				async (res) => (this.usuarios = await res.json()),
 				(err) => mostrarToast(err.message, true)
 			);
@@ -33,7 +33,7 @@ function usuariosApp() {
 
 		cargarRoles() {
 			apiSend(
-				{ url: `${baseUrl}/admin/roles` },
+				{ url: `${apiUrl}/roles` },
 				async (res) => (this.roles = await res.json()),
 				(err) => mostrarToast(err.message, true)
 			);
@@ -43,7 +43,7 @@ function usuariosApp() {
 			this.usuario.rol = this.roles.find(r => r.id === this.usuario.rol.id);
 			apiSend(
 				{
-					url: `${baseUrl}/admin/usuarios`,
+					url: `${apiUrl}/usuarios`,
 					method: this.modoEdicion ? "PUT" : "POST",
 					body: JSON.stringify(this.usuario),
 				},
@@ -64,7 +64,7 @@ function usuariosApp() {
 		eliminarUsuario() {
 			apiSend(
 				{
-					url: `${baseUrl}/admin/usuarios/${this.usuario.id}`,
+					url: `${apiUrl}/usuarios/${this.usuario.id}`,
 					method: "DELETE",
 				},
 				async (res) => {
@@ -76,16 +76,16 @@ function usuariosApp() {
 			);
 		},
 
-		toggleActivo(u) {
-			const nuevoEstado = !u.activo;
+		toggleActivo(usuario) {
+			const nuevoEstado = !usuario.activo;
 			apiSend(
 				{
-					url: `${baseUrl}/admin/usuarios/${u.id}`,
+					url: `${apiUrl}/usuarios/${usuario.id}`,
 					method: "PATCH",
 					body: JSON.stringify({ activo: nuevoEstado }),
 				},
 				async (res) => {
-					u.activo = nuevoEstado;
+					usuario.activo = nuevoEstado;
 					mostrarToast(
 						nuevoEstado
 							? "Usuario activado correctamente"
@@ -102,28 +102,19 @@ function usuariosApp() {
 		// ---------------------------------------
 
 		abrirModalNuevo() {
-			this.usuario = JSON.parse(JSON.stringify(usuarioVacio));
+			this.usuario = { ...usuarioVacio };
 			this.modoEdicion = false;
-			this.modalUsuario = new bootstrap.Modal(
-				document.getElementById("modalGuardarUsuario")
-			);
 			this.modalUsuario.show();
 		},
 
-		abrirModalEditar(u) {
-			this.usuario = JSON.parse(JSON.stringify(u));
+		abrirModalEditar(usuario) {
+			this.usuario = { ...usuario };
 			this.modoEdicion = true;
-			this.modalUsuario = new bootstrap.Modal(
-				document.getElementById("modalGuardarUsuario")
-			);
 			this.modalUsuario.show();
 		},
 
-		confirmarEliminar(u) {
-			this.usuario = JSON.parse(JSON.stringify(u));
-			this.modalEliminar = new bootstrap.Modal(
-				document.getElementById("modalEliminarUsuario")
-			);
+		confirmarEliminar(usuario) {
+			this.usuario = { ...usuario };
 			this.modalEliminar.show();
 		},
 	};

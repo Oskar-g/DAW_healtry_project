@@ -74,26 +74,26 @@ public class NutricionistaServiceImpl implements NutricionistaService {
     // Métodos de mapeo manual con builder
     // =========================
 
-    private NutricionistaPerfilDTO mapEntityToPerfilDto(Nutricionista entity) {
-    	Usuario usuario = entity.getUsuario();
+    private NutricionistaPerfilDTO mapEntityToPerfilDto(Nutricionista entidad) {
+    	Usuario usuario = entidad.getUsuario();
         return NutricionistaPerfilDTO.builder()
-                .id(entity.getId() != null ? entity.getId().longValue() : null)
+                .id(entidad.getId() != null ? entidad.getId().longValue() : null)
                 .nombre(usuario.getNombre())
                 .apellido(usuario.getApellidos())
                 .email(usuario.getCorreo())
-                .especialidad(entity.getEspecialidad())
+                .especialidad(entidad.getEspecialidad())
                 .build();
     }
 
-    private NutricionistaResumenDTO mapEntityToResumenDto(Nutricionista entity) {
-    	Usuario usuario = entity.getUsuario();
+    private NutricionistaResumenDTO mapEntityToResumenDto(Nutricionista entidad) {
+    	Usuario usuario = entidad.getUsuario();
         // TODO: agregar listas reales de clientes, dietas y planes
         List<String> clientes = new ArrayList<>();
         List<String> dietas = new ArrayList<>();
         List<String> planesEjercicio = new ArrayList<>();
 
         return NutricionistaResumenDTO.builder()
-                .id(entity.getId())
+                .id(entidad.getId())
                 .nombreCompleto(String.format("%s %s", usuario.getNombre(), usuario.getApellidos()))
                 .clientes(clientes)
                 .dietas(dietas)

@@ -110,23 +110,23 @@ public class PlanEjercicioServiceImpl implements PlanEjercicioService {
                 .build();
     }
 
-    private PlanEjercicioDTO mapEntityToDto(PlanEjercicio entity) {
+    private PlanEjercicioDTO mapEntityToDto(PlanEjercicio entidad) {
         return PlanEjercicioDTO.builder()
-                .id(entity.getId() != null ? entity.getId().longValue() : null)
-                .nombre(entity.getCliente() != null ? "Plan de " + entity.getCliente().getUsuario().getNombre() : null) // placeholder
-                .fechaInicio(entity.getFechaInicio())
-                .fechaFin(entity.getFechaFin())
-                .clienteId(entity.getCliente() != null ? entity.getCliente().getId().longValue() : null)
+                .id(entidad.getId() != null ? entidad.getId().longValue() : null)
+                .nombre(entidad.getCliente() != null ? "Plan de " + entidad.getCliente().getUsuario().getNombre() : null) // placeholder
+                .fechaInicio(entidad.getFechaInicio())
+                .fechaFin(entidad.getFechaFin())
+                .clienteId(entidad.getCliente() != null ? entidad.getCliente().getId().longValue() : null)
                 .build();
     }
 
-    private PlanResumenDTO mapEntityToResumenDto(PlanEjercicio entity) {
+    private PlanResumenDTO mapEntityToResumenDto(PlanEjercicio entidad) {
         return PlanResumenDTO.builder()
-                .id(entity.getId() != null ? entity.getId().longValue() : null)
-                .nombre(entity.getCliente() != null ? "Plan de " + entity.getCliente().getUsuario().getNombre() : null) // placeholder
-                .fechaInicio(entity.getFechaInicio())
-                .fechaFin(entity.getFechaFin())
-                .clienteId(entity.getCliente() != null ? entity.getCliente().getId().longValue() : null)
+                .id(entidad.getId() != null ? entidad.getId().longValue() : null)
+                .nombre(entidad.getCliente() != null ? "Plan de " + entidad.getCliente().getUsuario().getNombre() : null) // placeholder
+                .fechaInicio(entidad.getFechaInicio())
+                .fechaFin(entidad.getFechaFin())
+                .clienteId(entidad.getCliente() != null ? entidad.getCliente().getId().longValue() : null)
                 .build();
     }
 }

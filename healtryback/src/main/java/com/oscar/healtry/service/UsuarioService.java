@@ -5,18 +5,15 @@ import java.util.List;
 import com.oscar.healtry.dto.admin.RolDTO;
 import com.oscar.healtry.dto.admin.UsuarioCrearDTO;
 import com.oscar.healtry.dto.admin.UsuarioDTO;
-import com.oscar.healtry.dto.admin.UsuarioUpdateDTO;
 import com.oscar.healtry.model.Rol;
 import com.oscar.healtry.model.Usuario;
 
 public interface UsuarioService {
     UsuarioDTO guardar(UsuarioDTO dto);
-    UsuarioDTO actualizar(Integer id, UsuarioUpdateDTO dto);
-    UsuarioDTO parchear(Integer id, UsuarioDTO usuario);
-    UsuarioDTO asignarRol(Integer id, Integer idRol);
-    UsuarioDTO buscarPorId(Integer id);
-    void eliminar(Integer id);
     List<UsuarioDTO> listarTodos();
+    UsuarioDTO obtener(Integer id);
+    UsuarioDTO parchear(Integer id, UsuarioDTO usuario);
+    void eliminar(Integer id);
     
 	// =========================
 	// Mapeo

@@ -1,0 +1,56 @@
+<div layout:decorate="~{layouts/main :: layout(sidebar='nutri')}" layout:fragment="contenido">
+	<script th:src="@{/js/nutri/comidas.js}"></script>
+
+	<div class="container mt-4" x-data="comidasApp()" x-init="init()">
+		<div class="d-flex justify-content-between align-items-center mb-3">
+			<h3 class="fw-semibold">Administración de Comidas</h3>
+			<button class="btn btn-success" @click="abrirModalNuevo()">
+				<i class="bi bi-plus-circle me-1"></i> Nueva comida
+			</button>
+		</div>
+
+		<!-- Tabla -->
+		<div class="table-responsive">
+			<table class="table table-bordered align-middle">
+				<thead class="main-color-light">
+					<tr>
+						<th>Nombre</th>
+						<th>Alimentos</th>
+						<th>Kcal</th>
+						<th style="width: 120px">Acciones</th>
+					</tr>
+				</thead>
+				<tbody>
+					<template x-for="com in comidas" :key="com.id">
+						<tr>
+							<td x-text="com.nombre"></td>
+							<td>
+								<ul class="mb-0">
+									<template x-for="alimento in com.alimentos" :key="alimento.id">
+										<li x-text="alimento.nombre + ' (' + alimento.gramos + ' g)'"></li>
+									</template>
+								</ul>
+							</td>
+							<td x-text="com.kcal"></td>
+							<td class="text-center">
+								<div class="btn-group" role="group">
+									<button class="btn btn-sm btn-primary me-1" @click="abrirModalEditar(com)">
+										<i class="bi bi-pencil"></i>
+									</button>
+									<button class="btn btn-sm btn-danger" @click="confirmarEliminar(com)">
+										<i class="bi bi-trash"></i>
+									</button>
+								</div>
+							</td>
+						</tr>
+					</template>
+					<tr x-show="comidas.length === 0">
+						<td colspan="4" class="text-center text-muted">No hay comidas registrados.</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+      <!-- Modales -->
+      <div th:replace="~{fragments/modales-comidas}"></div>
+	</div>
+</div>

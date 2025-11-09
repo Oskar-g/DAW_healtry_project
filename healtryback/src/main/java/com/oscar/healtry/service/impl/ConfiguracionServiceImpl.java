@@ -78,12 +78,12 @@ public class ConfiguracionServiceImpl implements ConfiguracionService {
 				.build();
 	}
 
-	private ConfiguracionDTO mapEntityToDto(Configuracion entity) {
+	private ConfiguracionDTO mapEntityToDto(Configuracion entidad) {
 		return ConfiguracionDTO.builder()
-				.clave(entity.getClave())
-				.valor(entity.getValor())
-				.tipo(entity.getTipo())
-				.descripcion(entity.getDescripcion())
+				.clave(entidad.getClave())
+				.valor(entidad.getValor())
+				.tipo(entidad.getTipo())
+				.descripcion(entidad.getDescripcion())
 				.build();
 	}
 }
