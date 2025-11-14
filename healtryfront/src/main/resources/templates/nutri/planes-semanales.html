@@ -1,0 +1,94 @@
+<div layout:decorate="~{layouts/main :: layout(sidebar='nutri')}" layout:fragment="contenido">
+	<script th:src="@{/js/nutri/planes-semanales.js}"></script>
+
+	<div class="container mt-4" x-data="planSemanalApp()" x-init="init()">
+		<div class="d-flex justify-content-between align-items-center mb-3">
+			<h3 class="fw-semibold">Plan Semanal de Comidas</h3>
+			<div>
+				<button class="btn btn-outline-secondary me-2" @click="abrirConfigComidas()">
+					<i class="bi bi-gear"></i> Configurar comidas
+				</button>
+				<button class="btn btn-success" @click="guardarPlan()">
+					<i class="bi bi-save me-1"></i> Guardar plan
+				</button>
+			</div>
+		</div>
+
+		<!-- Nombre del plan -->
+		<div class="card mb-3 shadow-sm">
+			<div class="card-body">
+				<div class="row align-items-center">
+					<div class="col-md-3">
+						<label class="form-label fw-semibold mb-0">Nombre del plan semanal</label>
+					</div>
+					<div class="col-md-6">
+						<input type="hidden" th:value="${session?.usuarioLogueado?.id}" name="nutricionistaId" />
+
+						<input type="text" class="form-control main-color-light"
+							placeholder="Ej: Plan equilibrado de otoño" x-model="plan.alias" required>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Tabla de planificación semanal -->
+		<div class="table-responsive">
+
+
+			<table class="table table-bordered align-middle text-center">
+				<thead class="main-color-light">
+					<tr>
+						<th>Comida / Día</th>
+						<template x-for="dia in dias" :key="dia">
+							<th x-text="dia"></th>
+						</template>
+					</tr>
+				</thead>
+				<tbody>
+					<template x-for="(tipo, idx) in tiposComida" :key="tipo">
+						<tr>
+							<th x-text="tipo" class="main-color-light text-start ps-3"></th>
+							<template x-for="dia in dias" :key="dia + tipo">
+								<td>
+									<div class="d-flex flex-column align-items-center justify-content-center">
+										<template x-if="plan[dia][tipo]">
+											<div>
+												<strong x-text="plan[dia][tipo].nombre"></strong>
+												<div class="text-muted small" x-text="plan[dia][tipo].kcal + ' kcal'">
+												</div>
+											</div>
+										</template>
+										<template x-if="!plan[dia][tipo]">
+											<span class="text-muted small fst-italic">Sin asignar</span>
+										</template>
+
+										<div class="mt-2">
+											<button class="btn btn-outline-primary btn-sm"
+												@click="abrirSelectorComida(dia, tipo)">
+												<i class="bi bi-pencil"></i>
+											</button>
+											<button class="btn btn-outline-danger btn-sm ms-1"
+												@click="quitarComida(dia, tipo)" x-show="plan[dia][tipo]">
+												<i class="bi bi-x-lg"></i>
+											</button>
+										</div>
+									</div>
+								</td>
+							</template>
+						</tr>
+					</template>
+				</tbody>
+				<tfoot>
+					<tr class="fw-semibold main-color-light">
+						<th class="text-start ps-3">Total diario (kcal)</th>
+						<template x-for="dia in dias" :key="'total-' + dia">
+							<td x-text="caloriasDia(dia)"></td>
+						</template>
+					</tr>
+				</tfoot>
+			</table>
+		</div>
+		<!-- Modales -->
+		<div th:replace="~{fragments/modales-planes-semanales}"></div>
+	</div>
+</div>

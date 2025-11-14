@@ -16,63 +16,64 @@
 					<!-- alimentos dinámicos -->
 					<div class="mb-3">
 						<label class="form-label">Alimentos</label>
-							<template x-for="(selectorAlimento, index) in selectorAlimentos" :key="index">
-								<div class="position-relative mb-2">
-									<div class="d-flex align-items-center">
-										<!-- Campo de búsqueda -->
-										<div class="flex-grow-1 position-relative me-2">
-											<label class="form-label fw-bold">Ingrediente</label>
-											<input type="text" 
-												class="form-control main-color-light"
-												placeholder="Buscar alimento..."
-												x-model="selectorAlimento.query"
-												@input="filtrarAlimentos(selectorAlimento)"
-												@focus="selectorAlimento.mostrando = true"
-												@blur="verificarSelectorValido(selectorAlimento, index)">
-											
-											<!-- Lista filtrada -->
-											<div class="list-group position-absolute w-100" 
-												x-show="selectorAlimento.mostrando && selectorAlimento.filtrados.length"
-												style="max-height: 150px; overflow-y: auto; z-index: 2000;">
-												<template x-for="alim in selectorAlimento.filtrados" :key="alim.id">
-													<button type="button" 
-														class="list-group-item list-group-item-action"
-														@click="seleccionarAlimento(selectorAlimento, alim)">
-														<span x-text="alim.nombre"></span>
-													</button>
-												</template>
-											</div>
+						<template x-for="(selectorAlimento, index) in selectorAlimentos" :key="index">
+							<div class="position-relative mb-2">
+								<div class="d-flex align-items-center">
+									<!-- Campo de búsqueda -->
+									<div class="flex-grow-1 position-relative me-2">
+										<label class="form-label fw-bold">Ingrediente</label>
+										<input type="text" class="form-control main-color-light"
+											placeholder="Buscar alimento..." x-model="selectorAlimento.query"
+											@input="filtrarAlimentos(selectorAlimento)"
+											@focus="selectorAlimento.mostrando = true"
+											@blur="verificarSelectorValido(selectorAlimento, index)">
+
+										<!-- Lista filtrada -->
+										<div class="list-group position-absolute w-100"
+											x-show="selectorAlimento.mostrando && selectorAlimento.filtrados.length"
+											style="max-height: 150px; overflow-y: auto; z-index: 2000;">
+											<template x-for="alim in selectorAlimento.filtrados" :key="alim.id">
+												<button type="button" class="list-group-item list-group-item-action"
+													@click="seleccionarAlimento(selectorAlimento, alim)">
+													<span x-text="alim.nombre"></span>
+												</button>
+											</template>
 										</div>
-						
-										<!-- gramos -->
-										<div class="me-1">
-									      <label class="form-label fw-bold">Gramos por ración</label>
-											<input type="number" min="0" step="0.1" class="form-control me-2 main-color-light"
-											x-model.number="selectorAlimento.gramos" placeholder="gramos" required>
-									    </div>
-										<div class="me-1">
-									      <label class="form-label fw-bold">Kcal por ración</label>
-									      <input type="text" class="form-control bg-light" :value="caloriasCalculadas(selectorAlimento).toFixed(2)" readonly>
-									    </div>
-											
-										<!-- botón eliminar -->
-										<div class="me-1">
-											<label class="form-label fw-bold">Quitar</label>	
-											<button type="button" class="form-control btn btn-danger btn-sm" @click="eliminarAlimento(index)">
-												<i class="bi bi-x-lg"></i>
-											</button>
-										</div>
-										
 									</div>
+
+									<!-- gramos -->
+									<div class="me-1">
+										<label class="form-label fw-bold">Gramos por ración</label>
+										<input type="number" min="0" step="0.1"
+											class="form-control me-2 main-color-light"
+											x-model.number="selectorAlimento.gramos" placeholder="gramos" required>
+									</div>
+									<div class="me-1">
+										<label class="form-label fw-bold">Kcal por ración</label>
+										<input type="text" class="form-control bg-light"
+											:value="caloriasCalculadas(selectorAlimento).toFixed(2)" readonly>
+									</div>
+
+									<!-- botón eliminar -->
+									<div class="me-1">
+										<label class="form-label fw-bold">Quitar</label>
+										<button type="button" class="form-control btn btn-danger btn-sm"
+											@click="eliminarAlimento(index)">
+											<i class="bi bi-x-lg"></i>
+										</button>
+									</div>
+
 								</div>
-							</template>
+							</div>
+						</template>
 						<button type="button" class="btn btn-outline-success btn-sm mt-2" @click="agregarAlimento()">
 							<i class="bi bi-plus-lg me-1"></i> Añadir alimento
 						</button>
-										<div class="me-1">
-									      <label class="form-label fw-bold">Kcal totales</label>
-									      <input type="text" class="form-control bg-light" :value="caloriasCalculadasTotal().toFixed(2)" readonly>
-									    </div>
+						<div class="me-1">
+							<label class="form-label fw-bold">Kcal totales</label>
+							<input type="text" class="form-control bg-light"
+								:value="caloriasCalculadasTotal().toFixed(2)" readonly>
+						</div>
 					</div>
 
 					<div class="text-end">

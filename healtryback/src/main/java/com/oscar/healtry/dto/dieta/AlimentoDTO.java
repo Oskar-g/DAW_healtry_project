@@ -32,7 +32,7 @@ public class AlimentoDTO {
 	private BigDecimal carbohidratos;
 
 	public BigDecimal getKcal() {
-		if (proteinas == null || grasas == null || carbohidratos == null)
+		if (null == proteinas || null == grasas || null == carbohidratos)
 			return BigDecimal.ZERO;
 		return proteinas.multiply(BigDecimal.valueOf(4))
 				.add(grasas.multiply(BigDecimal.valueOf(9)))

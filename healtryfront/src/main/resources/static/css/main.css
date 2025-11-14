@@ -75,52 +75,53 @@
  	color: #000;
  	font-weight: 600;
  }
- 
+
  .sidebar .nav-link:hover {
-    background-color: #99ff99;
-    color: #000;
-    font-weight: 600;
-}
+ 	background-color: #99ff99;
+ 	color: #000;
+ 	font-weight: 600;
+ }
 
  .content {
  	flex-grow: 1;
  	padding: 2rem;
  }
- 
- 
+
+
  body {
-  min-height: 100vh;
-  overflow-x: hidden;
-}
+ 	min-height: 100vh;
+ 	overflow-x: hidden;
+ }
 
-.sidebar {
-  width: 250px;
-  background-color: #f8f9fa;
-  border-right: 1px solid #dee2e6;
-  min-height: calc(100vh - 56px); /* 56px = altura navbar Bootstrap */
-}
+ .sidebar {
+ 	width: 250px;
+ 	background-color: #f8f9fa;
+ 	border-right: 1px solid #dee2e6;
+ 	min-height: calc(100vh - 56px);
+ 	/* 56px = altura navbar Bootstrap */
+ }
 
-.sidebar .user-info {
-  padding: 1.5rem 1rem;
-  text-align: center;
-  border-bottom: 1px solid #dee2e6;
-}
+ .sidebar .user-info {
+ 	padding: 1.5rem 1rem;
+ 	text-align: center;
+ 	border-bottom: 1px solid #dee2e6;
+ }
 
-.sidebar .user-info img {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  object-fit: cover;
-  margin-bottom: 0.5rem;
-}
+ .sidebar .user-info img {
+ 	width: 80px;
+ 	height: 80px;
+ 	border-radius: 50%;
+ 	object-fit: cover;
+ 	margin-bottom: 0.5rem;
+ }
 
-.sidebar .nav-link {
-  color: #333;
-  font-weight: 500;
-}
+ .sidebar .nav-link {
+ 	color: #333;
+ 	font-weight: 500;
+ }
 
-.sidebar .nav-link.active {
-  background-color: #dcffdc;
-  color: #000;
-  font-weight: 600;
-}
+ .sidebar .nav-link.active {
+ 	background-color: #dcffdc;
+ 	color: #000;
+ 	font-weight: 600;
+ }

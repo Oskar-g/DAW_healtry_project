@@ -19,7 +19,7 @@ public interface AlimentoService {
 	// =========================
 
 	public static Alimento mapToEntity(AlimentoDTO dto) {
-		if (dto == null) {
+		if (null == dto) {
 			return null;
 		}
 		return Alimento.builder()
@@ -32,6 +32,10 @@ public interface AlimentoService {
 	}
 
 	public static AlimentoDTO mapToDto(Alimento entidad) {
+		if (null == entidad) {
+			return null;
+		}
+
 		return AlimentoDTO.builder()
 				.id(entidad.getId())
 				.nombre(entidad.getNombre())

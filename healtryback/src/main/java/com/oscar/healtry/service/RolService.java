@@ -13,19 +13,17 @@ public interface RolService {
 	// =========================
 
 	public static Rol mapToEntity(RolDTO dto) {
-		if (dto == null) {
+		if (null == dto) {
 			return null;
 		}
-		return Rol.builder()
-				.id(dto.getId())
-				.nombre(dto.getNombre())
-				.build();
+		return Rol.builder().id(dto.getId()).nombre(dto.getNombre()).build();
 	}
 
 	public static RolDTO mapToDto(Rol entidad) {
-		return RolDTO.builder()
-				.id(entidad.getId())
-				.nombre(entidad.getNombre())
-				.build();
+		if (null == entidad) {
+			return null;
+		}
+
+		return RolDTO.builder().id(entidad.getId()).nombre(entidad.getNombre()).build();
 	}
 }

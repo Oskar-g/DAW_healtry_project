@@ -1,110 +1,64 @@
 <!-- Modal Crear y editar Eliminación -->
-<div
-   class="modal fade"
-   id="modalGuardarConfig"
-   tabindex="-1"
-   aria-hidden="true"
-   >
-   <div class="modal-dialog">
-      <div class="modal-content">
-         <div class="modal-header main-color-light">
-            <h5
-               class="modal-title"
-               x-text="modoEdicion ? 'Editar parámetro' : 'Nuevo parámetro'"
-               ></h5>
-            <button
-               type="button"
-               class="btn-close"
-               data-bs-dismiss="modal"
-               ></button>
-         </div>
-         <div class="modal-body">
-            <form @submit.prevent="guardarParametro()">
-               <div class="mb-3">
-                  <label class="form-label">Clave</label>
-                  <input
-                     type="text"
-                     required
-                     class="form-control main-color-light"
-                     x-model="parametro.clave"
-                     :readonly="modoEdicion"
-                     />
-               </div>
-               <div class="mb-3">
-                  <label class="form-label">Valor</label>
-                  <input
-                     required
-                     type="text"
-                     class="form-control main-color-light"
-                     x-model="parametro.valor"
-                     />
-               </div>
-               <div class="mb-3">
-                  <label class="form-label">Tipo</label>
-                  <input
-                     required
-                     type="text"
-                     class="form-control main-color-light"
-                     x-model="parametro.tipo"
-                     />
-               </div>
-               <div class="mb-3">
-                  <label class="form-label">Descripción</label>
-                  <textarea
-                     class="form-control main-color-light"
-                     x-model="parametro.descripcion"
-                     ></textarea>
-               </div>
-               <div class="text-end">
-                  <button
-                     type="button"
-                     class="btn btn-secondary"
-                     data-bs-dismiss="modal"
-                     >
-                  Cancelar
-                  </button>
-                  <button type="submit" class="btn btn-success">
-                  <i class="bi bi-save me-1"></i> Guardar
-                  </button>
-               </div>
-            </form>
-         </div>
-      </div>
-   </div>
+<div class="modal fade" id="modalGuardarConfig" tabindex="-1" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header main-color-light">
+				<h5 class="modal-title" x-text="modoEdicion ? 'Editar parámetro' : 'Nuevo parámetro'"></h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+			</div>
+			<div class="modal-body">
+				<form @submit.prevent="guardarParametro()">
+					<div class="mb-3">
+						<label class="form-label">Clave</label>
+						<input type="text" required class="form-control main-color-light" x-model="parametro.clave"
+							:readonly="modoEdicion" />
+					</div>
+					<div class="mb-3">
+						<label class="form-label">Valor</label>
+						<input required type="text" class="form-control main-color-light" x-model="parametro.valor" />
+					</div>
+					<div class="mb-3">
+						<label class="form-label">Tipo</label>
+						<input required type="text" class="form-control main-color-light" x-model="parametro.tipo" />
+					</div>
+					<div class="mb-3">
+						<label class="form-label">Descripción</label>
+						<textarea class="form-control main-color-light" x-model="parametro.descripcion"></textarea>
+					</div>
+					<div class="text-end">
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+							Cancelar
+						</button>
+						<button type="submit" class="btn btn-success">
+							<i class="bi bi-save me-1"></i> Guardar
+						</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
 </div>
 <!-- Modal Confirmar Eliminación -->
 <div class="modal fade" id="modalEliminarConfig" tabindex="-1" aria-hidden="true">
-   <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-         <div class="modal-header bg-danger text-white">
-            <h5 class="modal-title">Confirmar eliminación</h5>
-            <button
-               type="button"
-               class="btn-close"
-               data-bs-dismiss="modal"
-               ></button>
-         </div>
-         <div class="modal-body">
-            ¿Seguro que deseas eliminar el parámetro
-            <strong x-text="parametro.clave"></strong>?
-         </div>
-         <div class="modal-footer">
-            <button
-               type="button"
-               class="btn btn-secondary"
-               data-bs-dismiss="modal"
-               >
-            Cancelar
-            </button>
-            <button
-               type="button"
-               class="btn btn-danger"
-               @click="eliminarParametro()"
-               >
-            <i class="bi bi-trash me-1"></i> Eliminar
-            </button>
-         </div>
-      </div>
-   </div>
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header bg-danger text-white">
+				<h5 class="modal-title">Confirmar eliminación</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+			</div>
+			<div class="modal-body">
+				¿Seguro que deseas eliminar el parámetro
+				<strong x-text="parametro.clave"></strong>?
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+					Cancelar
+				</button>
+				<button type="button" class="btn btn-danger" @click="eliminarParametro()">
+					<i class="bi bi-trash me-1"></i> Eliminar
+				</button>
+			</div>
+		</div>
+	</div>
 </div>
 <div>

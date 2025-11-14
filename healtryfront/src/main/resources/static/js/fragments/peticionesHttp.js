@@ -9,6 +9,9 @@ async function apiSend(info, onSuccess, onError, finalmente) {
 				...info
 			}
 		);
+		if (!res.ok) {
+			throw Error(`ERROR: ${res.status}`)
+		}
 		onSuccess(res, info);
 
 	} catch (err) {

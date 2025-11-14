@@ -29,12 +29,12 @@ public class ComidaAlimento {
 
 	@ManyToOne
 	@MapsId("comidaId")
-	@JoinColumn(name = "comida_id")
+	@JoinColumn(name = "id_comida")
 	private Comida comida;
 
 	@ManyToOne
 	@MapsId("alimentoId")
-	@JoinColumn(name = "alimento_id")
+	@JoinColumn(name = "id_alimento")
 	private Alimento alimento;
 
 	@Column(nullable = false, precision = 8, scale = 2)
