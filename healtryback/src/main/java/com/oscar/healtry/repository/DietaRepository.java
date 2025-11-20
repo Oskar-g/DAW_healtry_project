@@ -1,15 +1,26 @@
 package com.oscar.healtry.repository;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
-import org.springframework.data.repository.ListCrudRepository;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import com.oscar.healtry.model.Dieta;
 
-@Repository
-public interface DietaRepository extends ListCrudRepository<Dieta, Integer> {
-	List<Dieta> findByClienteId(Integer idCliente);
+public interface DietaRepository extends JpaRepository<Dieta, Long> {
 
-	List<Dieta> findByNutricionistaId(Integer idNutricionista);
+	List<Dieta> findByPlanNutricionistaId(Long idNutricionista);
+
+	@Query("""
+			    SELECT d
+			    FROM Dieta d
+			    JOIN d.dietaClientes dc
+			    WHERE dc.cliente.id = :idCliente
+			      AND :fecha BETWEEN d.fechaInicio AND d.fechaFin
+			""")
+	Optional<Dieta> findActivaPorCliente(@Param("idCliente") Long idCliente, @Param("fecha") LocalDate fecha);
+
 }

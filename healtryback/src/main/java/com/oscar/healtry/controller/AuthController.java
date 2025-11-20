@@ -14,7 +14,6 @@ import com.oscar.healtry.dto.RespuestaGeneralDTO;
 import com.oscar.healtry.dto.auth.ConfirmarRecuperacionDTO;
 import com.oscar.healtry.dto.auth.LoginRequestDTO;
 import com.oscar.healtry.dto.auth.LoginResponseDTO;
-import com.oscar.healtry.dto.auth.RecuperarPasswordRequestDTO;
 import com.oscar.healtry.service.AuthService;
 
 import lombok.RequiredArgsConstructor;
@@ -30,10 +29,11 @@ public class AuthController {
 	private final AuthService authService;
 
 	@PostMapping("/login")
-	public ResponseEntity<RespuestaGeneralDTO<LoginResponseDTO>> procesarLogin(@RequestBody LoginRequestDTO request) {
+	public ResponseEntity<RespuestaGeneralDTO<LoginResponseDTO>> procesarLogin(
+			@RequestBody final LoginRequestDTO request) {
 		log.debug("ENTRADA procesarLogin({})", request);
 
-		LoginResponseDTO data = authService.login(request);
+		var data = authService.login(request);
 		RespuestaGeneralDTO<LoginResponseDTO> response = RespuestaGeneralDTO.builder()
 				.status(HttpStatus.OK)
 				.build(data);
@@ -47,17 +47,8 @@ public class AuthController {
 	 */
 	@PostMapping("/logout")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void logout(@RequestHeader("Authorization") String token) {
+	public void logout(@RequestHeader("Authorization") final String token) {
 		authService.logout(token);
-	}
-
-	/**
-	 * Envía un correo con código de recuperación de contraseña.
-	 */
-	@PostMapping("/recuperar")
-	@ResponseStatus(HttpStatus.OK)
-	public void solicitarRecuperacion(@RequestBody @Validated RecuperarPasswordRequestDTO request) {
-		authService.generarCodigoRecuperacionPassword(request.getCorreo());
 	}
 
 	/**
@@ -65,7 +56,7 @@ public class AuthController {
 	 */
 	@PostMapping("/confirmar-recuperar")
 	@ResponseStatus(HttpStatus.OK)
-	public void confirmarRecuperacion(@RequestBody @Validated ConfirmarRecuperacionDTO request) {
+	public void confirmarRecuperacion(@RequestBody @Validated final ConfirmarRecuperacionDTO request) {
 		authService.confirmarCodigoYRestablecer(request);
 	}
 
@@ -73,7 +64,7 @@ public class AuthController {
 	 * Opción para refrescar token JWT o renovar sesión.
 	 */
 	@PostMapping("/refresh")
-	public ResponseEntity<LoginResponseDTO> refresh(@RequestHeader("Authorization") String refreshToken) {
+	public ResponseEntity<LoginResponseDTO> refresh(@RequestHeader("Authorization") final String refreshToken) {
 		return ResponseEntity.ok(authService.refreshToken(refreshToken));
 	}
 }

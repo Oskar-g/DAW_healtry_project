@@ -17,7 +17,7 @@ import lombok.experimental.Accessors;
 public class LoginResponseDTO {
 	private String token;
 	private String refreshToken;
-	private Integer id;
+	private Long id;
 	private String nombre;
 	private String apellidos;
 	private String correo;

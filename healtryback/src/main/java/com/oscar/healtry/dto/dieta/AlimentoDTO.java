@@ -17,7 +17,7 @@ import lombok.experimental.SuperBuilder;
 @Accessors(chain = true)
 public class AlimentoDTO {
 
-	private Integer id;
+	private Long id;
 
 	@NotBlank
 	private String nombre;

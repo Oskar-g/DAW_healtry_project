@@ -1,15 +1,21 @@
 package com.oscar.healtry.service.impl;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 import com.oscar.healtry.dto.admin.UsuarioDTO;
 import com.oscar.healtry.model.Usuario;
+import com.oscar.healtry.repository.ClienteRepository;
+import com.oscar.healtry.repository.NutricionistaRepository;
 import com.oscar.healtry.repository.UsuarioRepository;
+import com.oscar.healtry.service.ClienteService;
+import com.oscar.healtry.service.NutricionistaService;
 import com.oscar.healtry.service.UsuarioService;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -20,73 +26,100 @@ import lombok.extern.slf4j.Slf4j;
 public class UsuarioServiceImpl implements UsuarioService {
 
 	private final UsuarioRepository usuarioRepository;
+	private final NutricionistaRepository nutricionistaRepository;
+	private final ClienteRepository clienteRepository;
 
 	@Override
-	public UsuarioDTO guardar(UsuarioDTO dto) {
+	@Transactional
+	public UsuarioDTO guardar(final UsuarioDTO dto) {
 		log.debug("ENTRADA crearUsuarioDTO({})", dto);
 
-		Usuario usuario = UsuarioService.mapToEntity(dto);
+		var usuario = UsuarioService.mapToEntity(dto);
 		usuario = usuarioRepository.save(usuario);
 
-		UsuarioDTO response = UsuarioService.mapToDto(usuario);
+		var response = UsuarioService.mapToDto(usuario);
 		log.debug("SALIDA crearUsuarioDTO -> {}", response);
 		return response;
 	}
 
 	@Override
-	public UsuarioDTO parchear(Integer id, UsuarioDTO usuario) {
-		log.debug("ENTRADA parchearUsuario(id={}, usuario={})", id, usuario);
+	public UsuarioDTO obtener(final Long id) {
+		log.debug("ENTRADA buscarDTOPorId({})", id);
 
-		Usuario existente = assertUser(id);
+		var usuario = assertUser(id);
 
-		if (null != usuario.getNombre()) {
-			existente.setActivo(usuario.getActivo());
-		}
-		if (null != usuario.getApellidos()) {
-			existente.setActivo(usuario.getActivo());
-		}
-		if (null != usuario.getCorreo()) {
-			existente.setActivo(usuario.getActivo());
-		}
-		if (null != usuario.getActivo()) {
-			existente.setActivo(usuario.getActivo());
-		}
-
-		existente = usuarioRepository.save(existente);
-
-		UsuarioDTO response = UsuarioService.mapToDto(existente);
-		log.debug("SALIDA cambiarEstadoDTO -> {}", response);
+		var response = UsuarioService.mapToDto(usuario);
+		log.debug("SALIDA buscarDTOPorId -> {}", response);
 		return response;
 	}
 
 	@Override
-	public UsuarioDTO obtener(Integer id) {
-		log.debug("ENTRADA buscarDTOPorId({})", id);
-
-		Usuario usuario = assertUser(id);
-
-		UsuarioDTO response = UsuarioService.mapToDto(usuario);
-		log.debug("SALIDA buscarDTOPorId -> {}", response);
-		return response;
+	public UsuarioDTO obtenerPorEmail(final String email) {
+		return usuarioRepository.findByCorreo(email).map(UsuarioService::mapToDto).orElse(null);
 	}
 
 	@Override
 	public List<UsuarioDTO> listarTodos() {
 		log.debug("ENTRADA listarTodosDTO()");
 
-		List<UsuarioDTO> lista = usuarioRepository.findAll().stream().map(UsuarioService::mapToDto).toList();
+		var lista = usuarioRepository.findAll().stream().map(usuario -> {
+
+			Optional<UsuarioDTO> nutricionista = nutricionistaRepository.findById(usuario.getId())
+					.map(NutricionistaService::mapToDto);
+
+			Optional<UsuarioDTO> cliente = clienteRepository.findById(usuario.getId()).map(ClienteService::mapToDto);
+
+			return nutricionista.or(() -> cliente).orElse(UsuarioService.mapToDto(usuario));
+
+		}).toList();
 
 		log.debug("SALIDA listarTodosDTO -> {}", lista);
 		return lista;
 	}
 
-	private Usuario assertUser(Integer id) {
+	private Usuario assertUser(final Long id) {
 		return usuarioRepository.findById(id)
 				.orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado: " + id));
 	}
 
 	@Override
-	public void eliminar(Integer id) {
+	@Transactional
+	public UsuarioDTO parchear(final Long id, final UsuarioDTO usuario) {
+		log.debug("ENTRADA parchearUsuario(id={}, usuario={})", id, usuario);
+
+		var existente = assertUser(id);
+
+		parchear(usuario, existente);
+
+		existente = usuarioRepository.save(existente);
+
+		var response = UsuarioService.mapToDto(existente);
+		log.debug("SALIDA cambiarEstadoDTO -> {}", response);
+		return response;
+	}
+
+	@Override
+	public void parchear(final UsuarioDTO usuario, final Usuario existente) {
+		if (null != usuario.getNombre()) {
+			existente.setNombre(usuario.getNombre());
+		}
+		if (null != usuario.getApellidos()) {
+			existente.setApellidos(usuario.getApellidos());
+		}
+		if (null != usuario.getCorreo()) {
+			existente.setCorreo(usuario.getCorreo());
+		}
+		if (null != usuario.getContrasena()) {
+			existente.setContrasena(usuario.getContrasena());
+		}
+		if (null != usuario.getActivo()) {
+			existente.setActivo(usuario.getActivo());
+		}
+	}
+
+	@Override
+	@Transactional
+	public void eliminar(final Long id) {
 		log.debug("ENTRADA eliminar({})", id);
 
 		usuarioRepository.deleteById(id);

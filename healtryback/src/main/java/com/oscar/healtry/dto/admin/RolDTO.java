@@ -12,6 +12,6 @@ import lombok.experimental.Accessors;
 @Builder(toBuilder = true)
 @Accessors(chain = true)
 public class RolDTO {
-    private Integer id;
-    private String nombre;
+	private Long id;
+	private String nombre;
 }

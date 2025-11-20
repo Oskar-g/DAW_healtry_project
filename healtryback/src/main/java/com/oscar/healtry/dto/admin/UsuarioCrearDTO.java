@@ -16,9 +16,15 @@ import lombok.experimental.Accessors;
 @Builder(toBuilder = true)
 @Accessors(chain = true)
 public class UsuarioCrearDTO {
-    @NotBlank private String nombre;
-    @NotBlank private String apellidos;
-    @Email @NotBlank private String correo;
-    @Nullable private String contrasena;
-    @NotNull private Integer idRol;
+	@NotBlank
+	private String nombre;
+	@NotBlank
+	private String apellidos;
+	@Email
+	@NotBlank
+	private String correo;
+	@Nullable
+	private String contrasena;
+	@NotNull
+	private Long idRol;
 }

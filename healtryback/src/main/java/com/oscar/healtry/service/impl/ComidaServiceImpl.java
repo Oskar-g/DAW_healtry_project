@@ -38,7 +38,7 @@ public class ComidaServiceImpl implements ComidaService {
 	public ComidaDTO editar(ComidaDTO comidaDTO) {
 		log.debug("ENTRADA editar({})", comidaDTO);
 
-		comidaAlimentoRepository.deleteByIdComidaId(comidaDTO.getId());
+		comidaAlimentoRepository.deleteByIdIdComida(comidaDTO.getId());
 
 		ComidaDTO response = guardar(comidaDTO);
 
@@ -63,7 +63,7 @@ public class ComidaServiceImpl implements ComidaService {
 	@Transactional
 	public void eliminar(Long id) {
 		log.debug("ENTRADA eliminar({})", id);
-		comidaRepository.deleteById(id.intValue());
+		comidaRepository.deleteById(id);
 		log.debug("SALIDA eliminar");
 	}
 
@@ -80,7 +80,7 @@ public class ComidaServiceImpl implements ComidaService {
 
 	@Override
 	@Transactional
-	public ComidaDTO obtener(Integer id) {
+	public ComidaDTO obtener(Long id) {
 		log.debug("ENTRADA obtenerComida({})", id);
 
 		ComidaDTO response = comidaRepository.findById(id)

@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 import com.oscar.healtry.model.Comida;
 
 @Repository
-public interface ComidaRepository extends ListCrudRepository<Comida, Integer> {
+public interface ComidaRepository extends ListCrudRepository<Comida, Long> {
 }

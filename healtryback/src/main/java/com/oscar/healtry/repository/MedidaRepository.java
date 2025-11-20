@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
 import com.oscar.healtry.model.Medida;
 
 @Repository
-public interface MedidaRepository extends ListCrudRepository<Medida, Integer> {
-	List<Medida> findByClienteId(Integer idCliente);
+public interface MedidaRepository extends ListCrudRepository<Medida, Long> {
+	List<Medida> findByClienteId(Long idCliente);
 }

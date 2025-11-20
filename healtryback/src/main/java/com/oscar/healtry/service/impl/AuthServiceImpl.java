@@ -12,7 +12,6 @@ import com.oscar.healtry.dto.auth.LoginResponseDTO;
 import com.oscar.healtry.exception.ExcepcionGeneral;
 import com.oscar.healtry.repository.UsuarioRepository;
 import com.oscar.healtry.service.AuthService;
-import com.oscar.healtry.util.RandomString;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,11 +28,11 @@ public class AuthServiceImpl implements AuthService {
 	public LoginResponseDTO login(LoginRequestDTO request) {
 		log.debug("ENTRADA login({})", request);
 
-		LoginResponseDTO response = usuarioRepository.findByCorreo(request.getCorreo())
+		var response = usuarioRepository.findByCorreo(request.getCorreo())
 				.filter(existente -> existente.getContrasena().equals(request.getContrasena()))
 				.map(LoginResponseDTO::de)
 				.orElseThrow(ExcepcionGeneral.throwing(HttpStatus.UNAUTHORIZED, "Usuario o contraseña incorrectos"));
-		
+
 		if (!response.isActivo()) {
 			throw ExcepcionGeneral.of(HttpStatus.UNAUTHORIZED, "Usuario no activo");
 		}
@@ -52,22 +51,12 @@ public class AuthServiceImpl implements AuthService {
 	}
 
 	@Override
-	public String generarCodigoRecuperacionPassword(String correo) {
-		log.debug("ENTRADA generarCodigoRecuperacionPassword({})", correo);
-
-		String codigo = RandomString.generarCodigo();
-		codigosResetPassword.put(correo, codigo);
-		log.debug("SALIDA generarCodigoRecuperacionPassword: {}", codigo);
-		return codigo;
-	}
-
-	@Override
 	public void confirmarCodigoYRestablecer(ConfirmarRecuperacionDTO request) {
 		log.debug("ENTRADA confirmarCodigoYRestablecer({})", request);
 
-		String correo = request.getCorreo();
-		String codigo = request.getCodigo();
-		String codigoAsignado = codigosResetPassword.get(correo);
+		var correo = request.getCorreo();
+		var codigo = request.getCodigo();
+		var codigoAsignado = codigosResetPassword.get(correo);
 
 		if (!codigo.equals(codigoAsignado)) {
 			throw ExcepcionGeneral.de("El código introducido no es válido");
@@ -81,7 +70,7 @@ public class AuthServiceImpl implements AuthService {
 		log.debug("ENTRADA refreshToken({})", refreshToken);
 
 		// TODO: validar refresh token y generar nuevo JWT
-		LoginResponseDTO response = new LoginResponseDTO();
+		var response = new LoginResponseDTO();
 		response.setToken("NUEVO_TOKEN_DE_PRUEBA");
 		response.setRefreshToken("NUEVO_REFRESH_TOKEN_DE_PRUEBA");
 

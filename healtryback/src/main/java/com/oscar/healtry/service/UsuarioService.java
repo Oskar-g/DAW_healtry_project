@@ -13,17 +13,21 @@ public interface UsuarioService {
 
 	List<UsuarioDTO> listarTodos();
 
-	UsuarioDTO obtener(Integer id);
+	UsuarioDTO obtener(Long id);
 
-	UsuarioDTO parchear(Integer id, UsuarioDTO usuario);
+	UsuarioDTO obtenerPorEmail(String email);
 
-	void eliminar(Integer id);
+	UsuarioDTO parchear(Long id, UsuarioDTO usuario);
+
+	void parchear(UsuarioDTO usuario, Usuario existente);
+
+	void eliminar(Long id);
 
 	// =========================
 	// Mapeo
 	// =========================
 
-	public static Usuario mapToEntity(UsuarioDTO dto) {
+	public static Usuario mapToEntity(final UsuarioDTO dto) {
 		if (null == dto) {
 			return null;
 		}
@@ -37,12 +41,12 @@ public interface UsuarioService {
 				.build();
 	}
 
-	public static Usuario mapToEntity(UsuarioCrearDTO dto) {
+	public static Usuario mapToEntity(final UsuarioCrearDTO dto) {
 		if (null == dto) {
 			return null;
 		}
 
-		Rol rol = Optional.ofNullable(dto.getIdRol()).map(id -> Rol.builder().id(id).build()).orElse(null);
+		var rol = Optional.ofNullable(dto.getIdRol()).map(id -> Rol.builder().id(id).build()).orElse(null);
 
 		return Usuario.builder()
 				.nombre(dto.getNombre())
@@ -54,7 +58,7 @@ public interface UsuarioService {
 				.build();
 	}
 
-	public static UsuarioDTO mapToDto(Usuario entidad) {
+	public static UsuarioDTO mapToDto(final Usuario entidad) {
 		if (null == entidad) {
 			return null;
 		}
@@ -67,4 +71,7 @@ public interface UsuarioService {
 				.activo(entidad.getActivo())
 				.build();
 	}
+
+	;
+
 }

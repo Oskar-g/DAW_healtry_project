@@ -1,50 +1,49 @@
 package com.oscar.healtry.controller;
 
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.oscar.healtry.dto.nutricionista.NutricionistaPerfilDTO;
-import com.oscar.healtry.dto.nutricionista.NutricionistaResumenDTO;
+import com.oscar.healtry.dto.admin.UsuarioDTO;
 import com.oscar.healtry.service.NutricionistaService;
 
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/nutricionista")
+@RequestMapping("/nutricionistas")
 @RequiredArgsConstructor
 @Validated
 public class NutricionistaController {
 
 	private final NutricionistaService nutricionistaService;
 
-	/**
-	 * Obtiene el perfil del nutricionista
-	 */
-	@GetMapping("/perfil/{id}")
-	public ResponseEntity<NutricionistaPerfilDTO> obtenerPerfil(@PathVariable Long id) {
-		return ResponseEntity.ok(nutricionistaService.obtenerPerfil(id));
+	@PostMapping
+	public ResponseEntity<UsuarioDTO> crear(@RequestBody @Validated UsuarioDTO nutricionista) {
+		return ResponseEntity.ok(nutricionistaService.crear(nutricionista));
 	}
 
-	/**
-	 * Actualiza el perfil del nutricionista
-	 */
-	@PutMapping("/perfil/{id}")
-	public ResponseEntity<NutricionistaPerfilDTO> actualizarPerfil(@PathVariable Long id,
-			@RequestBody @Validated NutricionistaPerfilDTO perfilDTO) {
-		return ResponseEntity.ok(nutricionistaService.actualizarPerfil(id, perfilDTO));
+	@GetMapping
+	public ResponseEntity<List<UsuarioDTO>> listar() {
+		return ResponseEntity.ok(nutricionistaService.listarTodos());
 	}
 
-	/**
-	 * Obtiene un resumen con clientes, dietas y planes
-	 */
-	@GetMapping("/resumen/{id}")
-	public ResponseEntity<NutricionistaResumenDTO> obtenerResumen(@PathVariable Long id) {
-		return ResponseEntity.ok(nutricionistaService.obtenerResumen(id));
+	@GetMapping("/{id}")
+	public ResponseEntity<UsuarioDTO> obtenerPerfil(@PathVariable Long id) {
+		return ResponseEntity.ok(nutricionistaService.obtener(id));
 	}
+
+	@PatchMapping("/{id}")
+	public ResponseEntity<UsuarioDTO> oarchear(@PathVariable Long id,
+			@RequestBody @Validated UsuarioDTO nutricionista) {
+		return ResponseEntity.ok(nutricionistaService.parchear(id, nutricionista));
+	}
+
 }

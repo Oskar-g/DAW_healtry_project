@@ -1,0 +1,117 @@
+<!-- Modal Crear / Editar Dieta (incluye selector de plan, fechas y selección múltiple de clientes) -->
+<div class="modal fade" id="modalCrearDieta" tabindex="-1"
+	aria-hidden="true">
+	<div class="modal-dialog modal-xl">
+		<div class="modal-content">
+			<form @submit.prevent="guardarDieta()">
+				<div class="modal-header main-color-light">
+					<h5 class="modal-title"
+						x-text="isEdicion ? 'Editar dieta' : 'Crear nueva dieta'"></h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+				</div>
+
+				<div class="modal-body">
+					<div class="row g-3">
+						<div class="col-md-6">
+							<label class="form-label">Plan semanal</label> <select
+								class="form-select" x-model.number="dieta.idPlan" required :disabled=isEdicion >
+								<option value="">Seleccione un plan</option>
+								<template x-for="p in planes" :key="p.id">
+									<option :value="p.id"
+										x-text="p.alias + ' (' + p.dias.length + ' días)'"></option>
+								</template>
+							</select>
+						</div>
+
+						<div class="col-md-3">
+							<label class="form-label">Fecha inicio</label> <input type="date"
+								class="form-control" x-model="dieta.fechaInicio" required>
+						</div>
+
+						<div class="col-md-3">
+							<label class="form-label">Fecha fin</label> <input type="date"
+								class="form-control" x-model="dieta.fechaFin" required>
+						</div>
+					</div>
+
+					<hr class="my-3">
+
+					<div class="d-flex justify-content-between align-items-center mb-2">
+						<h6 class="mb-0">Seleccionar clientes</h6>
+						<div>
+							<input class="form-check-input me-2" type="checkbox"
+								id="chkTodosCrear"
+								@change="toggleSeleccionTodos($event.target.checked)"> <label
+								class="form-check-label" for="chkTodosCrear">Seleccionar
+								todos</label>
+						</div>
+					</div>
+
+					<input type="text" class="form-control mb-3"
+						placeholder="Buscar cliente..." x-model="filtroClientes">
+
+					<div class="table-responsive"
+						style="max-height: 40vh; overflow-y: auto;">
+						<table class="table table-hover align-middle">
+							<thead class="main-color-light">
+								<tr>
+									<th>Sel</th>
+									<th>Nombre</th>
+									<th>Correo</th>
+								</tr>
+							</thead>
+							<tbody>
+								<template x-for="c in clientesFiltrados()" :key="c.id">
+									<tr>
+										<td class="text-center"><input type="checkbox"
+											:value="c.id" @change="toggleClienteSeleccionado(c.id)"
+											:checked="clientesSeleccionados.has(c.id)"></td>
+										<td x-text="c.nombre + ' ' + c.apellidos"></td>
+										<td x-text="c.correo"></td>
+									</tr>
+								</template>
+								<tr x-show="clientesFiltrados().length === 0">
+									<td colspan="3" class="text-center text-muted">No hay
+										coincidencias.</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+
+				</div>
+
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary"
+						data-bs-dismiss="modal">Cancelar</button>
+					<button type="submit" class="btn btn-success">
+						<i class="bi bi-check-circle me-1"></i> <span
+							x-text="isEdicion ? 'Guardar cambios' : 'Crear dieta'"></span>
+					</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+<!-- Modal confirmar eliminación -->
+<div class="modal fade" id="modalConfirmarEliminarDieta" tabindex="-1"
+	aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header main-color-light">
+				<h5 class="modal-title">Confirmar eliminación</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+			</div>
+			<div class="modal-body">
+				¿Seguro que deseas eliminar la dieta <strong class="text-danger"
+					x-text="dietaSeleccionada?.plan?.alias"></strong>?
+			</div>
+			<div class="modal-footer">
+				<button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+				<button class="btn btn-danger" @click="eliminarDietaConfirmada()">
+					<i class="bi bi-trash me-1"></i> Eliminar
+				</button>
+			</div>
+		</div>
+	</div>
+</div>

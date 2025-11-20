@@ -17,6 +17,6 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class ComidaAlimentoId implements Serializable {
 	private static final long serialVersionUID = 1L;
-	private Integer comidaId;
-	private Integer alimentoId;
+	private Long idComida;
+	private Long idAlimento;
 }

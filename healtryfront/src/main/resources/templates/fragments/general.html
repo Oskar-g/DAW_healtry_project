@@ -10,8 +10,8 @@
 	<link th:if="${css}" rel="stylesheet" th:href="@{'/css/'+${css}+'.css'}" />
 
 
-	<script th:src="@{/js/fragments/peticionesHttp.js}" defer></script>
-	<script th:src="@{/js/fragments/toast.js}" defer></script>
+	<script th:src="@{/js/utils/peticionesHttp.js}" defer></script>
+	<script th:src="@{/js/utils/toast.js}" defer></script>
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
 		integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
 		crossorigin="anonymous"></script>
@@ -25,9 +25,11 @@
 <!-- NAVBAR -->
 
 <nav th:fragment="navbar" class="navbar custom-navbar shadow-sm main-color">
-	<div class="container-fluid">
+
+
+	<div class="container-fluid"  x-init="init()" x-data="config()">
 		<div class="position-absolute start-50 translate-middle-x">
-			<span class="navbar-brand mb-0 h1 text-center">HEALTRY</span>
+			<span class="navbar-brand mb-0 h1 text-center" x-text="getTitle()">HEALTRY</span>
 		</div>
 
 		<div class="ms-auto d-flex align-items-center gap-3">

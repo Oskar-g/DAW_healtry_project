@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
 import com.oscar.healtry.model.Usuario;
 
 @Repository
-public interface UsuarioRepository extends ListCrudRepository<Usuario, Integer> {
+public interface UsuarioRepository extends ListCrudRepository<Usuario, Long> {
 	Optional<Usuario> findByCorreo(String correo);
 }

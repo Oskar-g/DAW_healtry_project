@@ -1,0 +1,186 @@
+<!-- Modal seleccionar comida -->
+<div class="modal fade" id="modalSeleccionarComida" tabindex="-1"
+	aria-hidden="true">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header main-color-light">
+				<h5 class="modal-title">Seleccionar comida</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+			</div>
+			<div class="modal-body">
+				<input type="text" class="form-control mb-3"
+					placeholder="Buscar comida..." x-model="filtroComidas">
+				<div class="table-responsive"
+					style="max-height: 400px; overflow-y: auto;">
+					<table class="table table-hover align-middle">
+						<thead class="main-color-light">
+							<tr>
+								<th>Nombre</th>
+								<th>Alimentos</th>
+								<th>Kcal</th>
+								<th></th>
+							</tr>
+						</thead>
+						<tbody>
+							<template x-for="com in comidasFiltradas()" :key="com.id">
+								<tr>
+									<td x-text="com.nombre"></td>
+									<td>
+										<ul class="mb-0 small">
+											<template x-for="a in com.alimentos" :key="a.id">
+												<li x-text="a.nombre + ' (' + a.gramos + ' g)'"></li>
+											</template>
+										</ul>
+									</td>
+									<td x-text="com.kcal"></td>
+									<td class="text-center">
+										<button class="btn btn-sm btn-success"
+											@click="asignarComida(com)">
+											<i class="bi bi-check-circle"></i>
+										</button>
+									</td>
+								</tr>
+							</template>
+							<tr x-show="comidasFiltradas().length === 0">
+								<td colspan="4" class="text-center text-muted">No hay
+									coincidencias.</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary"
+					data-bs-dismiss="modal">Cerrar</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Modal seleccionar tipo comida -->
+<div class="modal fade" id="modalConfigComidas" tabindex="-1"
+	aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header main-color-light">
+				<h5 class="modal-title">Configurar tipos de comidas del día</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+			</div>
+			<div class="modal-body">
+				<p class="text-muted small">Selecciona las comidas que deseas
+					incluir en el plan diario.</p>
+
+				<div class="d-flex flex-wrap">
+					<template x-for="(tipo, idx) in todosLosTipos" :key="idx">
+						<div class="form-check me-4 mb-2">
+							<input class="form-check-input" type="checkbox"
+								:id="'chk-' + tipo" :value="tipo" x-model="tiposComida">
+							<label class="form-check-label" :for="'chk-' + tipo"
+								x-text="tipo"></label>
+						</div>
+					</template>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary"
+					data-bs-dismiss="modal">Cancelar</button>
+				<button type="button" class="btn btn-success"
+					data-bs-dismiss="modal" @click="actualizarTiposComida()">
+					<i class="bi bi-check-circle me-1"></i> Aplicar
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<!-- Modal listar planes -->
+<div class="modal fade" id="modalPlanes" tabindex="-1"
+	aria-hidden="true">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+
+			<div class="modal-header main-color-light">
+				<h5 class="modal-title">Planes semanales creados</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+			</div>
+
+			<div class="modal-body">
+
+				<div class="table-responsive"
+					style="max-height: 400px; overflow-y: auto;">
+					<table class="table table-hover align-middle">
+						<thead class="main-color-light">
+							<tr>
+								<th>Nombre</th>
+								<th>Días configurados</th>
+								<th></th>
+							</tr>
+						</thead>
+						<tbody>
+							<template x-for="pln in planes" :key="pln.id">
+								<tr>
+									<td x-text="pln.alias"></td>
+									<td x-text="pln.dias.length"></td>
+									<td class="text-end">
+										<button class="btn btn-sm btn-primary me-2"
+											@click="editarPlan(pln, true)">
+											<i class="bi bi-pencil"></i>
+										</button>
+
+										<button class="btn btn-sm btn-danger"
+											@click="solicitarEliminarPlan(pln)">
+											<i class="bi bi-trash"></i>
+										</button>
+									</td>
+								</tr>
+							</template>
+
+							<tr x-show="planes.length === 0">
+								<td colspan="3" class="text-center text-muted">No hay
+									planes creados.</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+
+			</div>
+
+			<div class="modal-footer">
+				<button class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+			</div>
+
+		</div>
+	</div>
+</div>
+
+<!-- Modal confirmar eliminación -->
+<div class="modal fade" id="modalConfirmarEliminar" tabindex="-1"
+	aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+
+			<div class="modal-header main-color-light">
+				<h5 class="modal-title">Confirmar eliminación</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+			</div>
+
+			<div class="modal-body">
+				<p class="fw-semibold">
+					¿Seguro que deseas eliminar el plan <span class="text-danger"
+						x-text="planAEliminar?.alias"></span>?
+				</p>
+				<p class="text-muted small mb-0">Esta acción no se puede
+					deshacer.</p>
+			</div>
+
+			<div class="modal-footer">
+				<button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+				<button class="btn btn-danger" @click="eliminarPlanConfirmado()">
+					<i class="bi bi-trash me-1"></i> Eliminar
+				</button>
+			</div>
+
+		</div>
+	</div>
+</div>

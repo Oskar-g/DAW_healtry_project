@@ -1,4 +1,4 @@
-<div layout:decorate="~{layouts/main :: layout(sidebar='nutri')}" layout:fragment="contenido">
+<div layout:decorate="~{layouts/main :: layout(sidebar='nutri', title='Healtry - Nutricionista:Comidas')}" layout:fragment="contenido">
 	<script th:src="@{/js/nutri/comidas.js}"></script>
 
 	<div class="container mt-4" x-data="comidasApp()" x-init="init()">
@@ -51,6 +51,6 @@
 			</table>
 		</div>
 		<!-- Modales -->
-		<div th:replace="~{fragments/modales-comidas}"></div>
+		<div th:replace="~{nutri/modales/modales-comidas}"></div>
 	</div>
 </div>

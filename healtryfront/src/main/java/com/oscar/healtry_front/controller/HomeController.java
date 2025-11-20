@@ -10,13 +10,13 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
-public class HomeController extends AdviceController{
+public class HomeController extends AdviceController {
 
 	@GetMapping({
 			"/", "/index", "/home"
 	})
-	public String home(HttpSession session) {
-		LoginResponseDTO usuario = (LoginResponseDTO) session.getAttribute("usuarioLogueado");
+	public String home(final HttpSession session) {
+		var usuario = (LoginResponseDTO) session.getAttribute("usuarioLogueado");
 		if (null == usuario) {
 			return "redirect:/login";
 		}
@@ -24,7 +24,7 @@ public class HomeController extends AdviceController{
 		return switch (usuario.getRol()) {
 		case "ADMINISTRACION" -> "redirect:/admin/";
 		case "NUTRICIONISTA" -> "redirect:/nutri/";
-		case "USUARIO" -> "redirect:/user/";
+		case "CLIENTE" -> "redirect:/cliente/";
 		default -> "redirect:/login";
 		};
 	}
@@ -32,23 +32,21 @@ public class HomeController extends AdviceController{
 	@GetMapping({
 			"/admin/"
 	})
-	public String adminHome(Model model, HttpSession session, HttpServletRequest request) {
-	    model.addAttribute("title", "Healtry - Administración:Configuracion");
-//	    model.addAttribute("requestURI", request.getRequestURI());
-	    return "admin";
+	public String adminHome(final Model model, final HttpSession session, final HttpServletRequest request) {
+		return "admin/home-admin";
 	}
 
 	@GetMapping({
 			"/nutri/"
 	})
-	public String nutriHome(HttpSession session) {
-		return "nutri";
+	public String nutriHome(final HttpSession session) {
+		return "nutri/home-nutri";
 	}
 
 	@GetMapping({
-			"/user/"
+			"/cliente/"
 	})
-	public String userHome(HttpSession session) {
-		return "user";
+	public String clienteHome(final HttpSession session) {
+		return "cliente/home-cliente";
 	}
 }

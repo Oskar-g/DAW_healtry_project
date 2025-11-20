@@ -13,6 +13,6 @@ import lombok.experimental.Accessors;
 @Builder(toBuilder = true)
 @Accessors(chain = true)
 public class AsignarRolDTO {
-    @NotNull
-    private Integer idRol;
+	@NotNull
+	private Long idRol;
 }

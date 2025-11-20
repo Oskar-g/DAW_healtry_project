@@ -10,7 +10,8 @@ import com.oscar.healtry.model.ComidaAlimentoId;
 
 @Repository
 public interface ComidaAlimentoRepository extends ListCrudRepository<ComidaAlimento, ComidaAlimentoId> {
-	
-	void deleteByIdComidaId(Integer idComida);
-	List<ComidaAlimento> findByComidaId(Integer idComida);
+
+	void deleteByIdIdComida(Long idComida);
+
+	List<ComidaAlimento> findByIdIdComida(Long idComida);
 }

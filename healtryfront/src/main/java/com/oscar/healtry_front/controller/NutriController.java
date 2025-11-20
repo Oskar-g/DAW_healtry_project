@@ -25,4 +25,8 @@ public class NutriController extends AdviceController {
 	public String planesSemanales(Model model, HttpSession session) {
 		return "nutri/planes-semanales";
 	}
+	@GetMapping("/nutri/dietas")
+	public String dietas(Model model, HttpSession session) {
+		return "nutri/dietas";
+	}
 }

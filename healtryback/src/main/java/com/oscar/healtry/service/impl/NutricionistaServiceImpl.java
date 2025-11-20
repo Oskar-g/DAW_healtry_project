@@ -1,17 +1,18 @@
 package com.oscar.healtry.service.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.oscar.healtry.dto.nutricionista.NutricionistaPerfilDTO;
-import com.oscar.healtry.dto.nutricionista.NutricionistaResumenDTO;
+import com.oscar.healtry.dto.admin.UsuarioDTO;
+import com.oscar.healtry.dto.admin.UsuarioDTO.NutricionistaInfo;
 import com.oscar.healtry.model.Nutricionista;
 import com.oscar.healtry.model.Usuario;
 import com.oscar.healtry.repository.NutricionistaRepository;
 import com.oscar.healtry.service.NutricionistaService;
+import com.oscar.healtry.service.UsuarioService;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -20,84 +21,88 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class NutricionistaServiceImpl implements NutricionistaService {
 
-    private final NutricionistaRepository nutricionistaRepository;
-    // TODO: inyectar repositorios de Cliente, Dieta y PlanEjercicio si se quiere obtener info completa del resumen
+	private final NutricionistaRepository nutricionistaRepository;
+	private final UsuarioService usuarioService;
 
-    @Override
-    public NutricionistaPerfilDTO obtenerPerfil(Long nutricionistaId) {
-        log.debug("ENTRADA obtenerPerfil({})", nutricionistaId);
+	@Override
+	@Transactional
+	public UsuarioDTO crear(UsuarioDTO nutricionista) {
+		log.debug("ENTRADA crear({})", nutricionista);
 
-        Nutricionista nutricionista = nutricionistaRepository.findById(nutricionistaId.intValue())
-                .orElseThrow(() -> new IllegalArgumentException("Nutricionista no encontrado: " + nutricionistaId));
+		Nutricionista entidad = NutricionistaService.mapToEntity(nutricionista);
+		entidad = nutricionistaRepository.save(entidad);
 
-        NutricionistaPerfilDTO response = mapEntityToPerfilDto(nutricionista);
-        log.debug("SALIDA obtenerPerfil -> {}", response);
-        return response;
-    }
+		UsuarioDTO response = NutricionistaService.mapToDto(entidad);
+		log.debug("SALIDA crear -> {}", response);
+		return response;
+	}
 
-    @Override
-    public NutricionistaPerfilDTO actualizarPerfil(Long nutricionistaId, NutricionistaPerfilDTO perfilDTO) {
-        log.debug("ENTRADA actualizarPerfil(nutricionistaId={}, perfilDTO={})", nutricionistaId, perfilDTO);
+	@Override
+	public List<UsuarioDTO> listarTodos() {
+		log.debug("ENTRADA listarTodosDTO()");
 
-        Nutricionista nutricionista = nutricionistaRepository.findById(nutricionistaId.intValue())
-                .orElseThrow(() -> new IllegalArgumentException("Nutricionista no encontrado: " + nutricionistaId));
+		List<UsuarioDTO> lista = nutricionistaRepository.findAll().stream().map(NutricionistaService::mapToDto)
+				.toList();
 
-        // Actualizar campos del usuario
-        if (nutricionista.getUsuario() != null) {
-            nutricionista.getUsuario()
-                    .setNombre(perfilDTO.getNombre())
-                    .setApellidos(perfilDTO.getApellido())
-                    .setCorreo(perfilDTO.getEmail());
-        }
-        nutricionista.setEspecialidad(perfilDTO.getEspecialidad());
+		log.debug("SALIDA listarTodosDTO -> {}", lista);
+		return lista;
+	}
 
-        nutricionista = nutricionistaRepository.save(nutricionista);
+	@Override
+	public UsuarioDTO buscar(Long id) {
+		log.debug("ENTRADA buscar({})", id);
 
-        NutricionistaPerfilDTO response = mapEntityToPerfilDto(nutricionista);
-        log.debug("SALIDA actualizarPerfil -> {}", response);
-        return response;
-    }
+		UsuarioDTO result = nutricionistaRepository.findById(id).map(NutricionistaService::mapToDto).orElse(null);
 
-    @Override
-    public NutricionistaResumenDTO obtenerResumen(Long nutricionistaId) {
-        log.debug("ENTRADA obtenerResumen({})", nutricionistaId);
+		log.debug("SALIDA buscar -> {}", result);
+		return result;
+	}
 
-        Nutricionista nutricionista = nutricionistaRepository.findById(nutricionistaId.intValue())
-                .orElseThrow(() -> new IllegalArgumentException("Nutricionista no encontrado: " + nutricionistaId));
+	@Override
+	public UsuarioDTO obtener(Long id) {
+		log.debug("ENTRADA obtener({})", id);
 
-        NutricionistaResumenDTO response = mapEntityToResumenDto(nutricionista);
-        log.debug("SALIDA obtenerResumen -> {}", response);
-        return response;
-    }
+		UsuarioDTO result = nutricionistaRepository.findById(id).map(NutricionistaService::mapToDto)
+				.orElseThrow(() -> new IllegalArgumentException("Nutricionista no encontrado: " + id));
 
-    // =========================
-    // Métodos de mapeo manual con builder
-    // =========================
+		log.debug("SALIDA obtener -> {}", result);
+		return result;
+	}
 
-    private NutricionistaPerfilDTO mapEntityToPerfilDto(Nutricionista entidad) {
-    	Usuario usuario = entidad.getUsuario();
-        return NutricionistaPerfilDTO.builder()
-                .id(entidad.getId() != null ? entidad.getId().longValue() : null)
-                .nombre(usuario.getNombre())
-                .apellido(usuario.getApellidos())
-                .email(usuario.getCorreo())
-                .especialidad(entidad.getEspecialidad())
-                .build();
-    }
+	@Override
+	@Transactional
+	public UsuarioDTO parchear(Long id, UsuarioDTO nutricionista) {
+		log.debug("ENTRADA editar({}, {})", id, nutricionista);
 
-    private NutricionistaResumenDTO mapEntityToResumenDto(Nutricionista entidad) {
-    	Usuario usuario = entidad.getUsuario();
-        // TODO: agregar listas reales de clientes, dietas y planes
-        List<String> clientes = new ArrayList<>();
-        List<String> dietas = new ArrayList<>();
-        List<String> planesEjercicio = new ArrayList<>();
+		if (null == nutricionista || null == nutricionista.getNutricionistaInfo()) {
+			throw new IllegalArgumentException("Nutricionista sin datos");
+		}
 
-        return NutricionistaResumenDTO.builder()
-                .id(entidad.getId())
-                .nombreCompleto(String.format("%s %s", usuario.getNombre(), usuario.getApellidos()))
-                .clientes(clientes)
-                .dietas(dietas)
-                .planesEjercicio(planesEjercicio)
-                .build();
-    }
+		Nutricionista entidad = nutricionistaRepository.findById(id)
+				.orElseThrow(() -> new IllegalArgumentException("Nutricionista no encontrado: " + id));
+
+		parchear(nutricionista, entidad);
+
+		entidad = nutricionistaRepository.save(entidad);
+		UsuarioDTO response = NutricionistaService.mapToDto(entidad);
+
+		log.debug("SALIDA actualizarPerfil -> {}", response);
+		return response;
+	}
+
+	@Override
+	public void parchear(UsuarioDTO nutricionista, Nutricionista entidad) {
+		Usuario usuarioExistente = entidad.getUsuario();
+		usuarioService.parchear(nutricionista, usuarioExistente);
+
+		NutricionistaInfo nutricionistaInfo = nutricionista.getNutricionistaInfo();
+		if (null != nutricionistaInfo.getEspecialidad()) {
+			entidad.setEspecialidad(nutricionistaInfo.getEspecialidad());
+		}
+
+		if (null != nutricionistaInfo.getExperienciaAnios()) {
+			entidad.setExperienciaAnios(nutricionistaInfo.getExperienciaAnios());
+		}
+	}
+
 }

@@ -1,0 +1,233 @@
+<!-- Modal Crear y editar Eliminación -->
+<div class="modal fade" id="modalGuardarUsuario" tabindex="-1"
+	aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header main-color-light">
+				<h5 class="modal-title"
+					x-text="modoEdicion ? 'Editar usuario' : 'Nuevo usuario'"></h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+			</div>
+			<div class="modal-body">
+				<form @submit.prevent="guardarUsuario()">
+					<div class="mb-3">
+						<label class="form-label">Nombre</label> <input type="text"
+							class="form-control" x-model="usuario.nombre"
+							:class="erroresValidacion.nombre ? 'is-invalid' : ''">
+						<div class="invalid-feedback" x-text="erroresValidacion.nombre"
+							x-show="erroresValidacion.nombre"></div>
+					</div>
+
+					<div class="mb-3">
+						<label class="form-label">Apellidos</label> <input type="text"
+							class="form-control" x-model="usuario.apellidos"
+							:class="erroresValidacion.apellidos ? 'is-invalid' : ''">
+						<div class="invalid-feedback" x-show="erroresValidacion.apellidos"
+							x-text="erroresValidacion.apellidos"></div>
+					</div>
+
+					<div class="mb-3">
+						<label class="form-label">Correo</label> <input type="email"
+							class="form-control" x-model="usuario.correo"
+							:class="erroresValidacion.correo ? 'is-invalid' : ''">
+						<div class="invalid-feedback" x-show="erroresValidacion.correo"
+							x-text="erroresValidacion.correo"></div>
+					</div>
+
+					<div class="mb-3">
+						<label class="form-label">Rol</label> <select :disabled=usuario.id
+							class="form-select" x-model.number="usuario.rol.id"
+							:class="erroresValidacion.rol ? 'is-invalid' : ''">
+							<option value="">Seleccione un rol</option>
+							<template x-for="r in roles" :key="r.id">
+								<option :value="r.id" x-text="r.nombre"></option>
+							</template>
+						</select>
+						<div class="invalid-feedback" x-show="erroresValidacion.rol"
+							x-text="erroresValidacion.rol"></div>
+					</div>
+					<!-- Campos nutricionista -->
+					<div
+						x-show="roles.find(r => r.id === usuario.rol.id)?.nombre === 'NUTRICIONISTA'"
+						x-transition>
+						<div class="mb-3">
+							<label class="form-label">Especialidad</label> <input type="text"
+								class="form-control"
+								x-model="usuario.nutricionistaInfo.especialidad"
+								:class="erroresValidacion.especialidad ? 'is-invalid' : ''">
+							<div class="invalid-feedback"
+								x-show="erroresValidacion.especialidad"
+								x-text="erroresValidacion.especialidad"></div>
+						</div>
+
+						<div class="mb-3">
+							<label class="form-label">Años de experiencia</label> <input
+								type="number" class="form-control"
+								x-model.number="usuario.nutricionistaInfo.experienciaAnios"
+								:class="erroresValidacion.experienciaAnios ? 'is-invalid' : ''">
+							<div class="invalid-feedback"
+								x-show="erroresValidacion.experienciaAnios"
+								x-text="erroresValidacion.experienciaAnios"></div>
+						</div>
+					</div>
+
+					<!-- Campos cliente -->
+					<div
+						x-show="roles.find(r => r.id === usuario.rol.id)?.nombre === 'CLIENTE'"
+						x-transition>
+						<div class="mb-3">
+							<label class="form-label">Fecha nacimiento</label> <input
+								type="date" class="form-control"
+								x-model="usuario.clienteInfo.fechaNacimiento"
+								:class="erroresValidacion.fechaNacimiento ? 'is-invalid' : ''">
+							<div class="invalid-feedback"
+								x-show="erroresValidacion.fechaNacimiento"
+								x-text="erroresValidacion.fechaNacimiento"></div>
+						</div>
+
+						<div class="mb-3">
+							<label class="form-label">Sexo</label> <select
+								class="form-select" x-model="usuario.clienteInfo.sexo"
+								:class="erroresValidacion.sexo ? 'is-invalid' : ''">
+								<option value="">Seleccione sexo</option>
+								<option value="H">Hombre</option>
+								<option value="M">Mujer</option>
+							</select>
+							<div class="invalid-feedback" x-show="erroresValidacion.sexo"
+								x-text="erroresValidacion.sexo"></div>
+						</div>
+
+						<div class="row">
+							<div class="col mb-3">
+								<label>Altura (cm)</label> <input type="number"
+									class="form-control"
+									x-model.number="usuario.clienteInfo.alturaCm"
+									:class="erroresValidacion.alturaCm ? 'is-invalid' : ''">
+								<div class="invalid-feedback"
+									x-show="erroresValidacion.alturaCm"
+									x-text="erroresValidacion.alturaCm"></div>
+							</div>
+
+							<div class="col mb-3">
+								<label>Peso (kg)</label> <input type="number"
+									class="form-control"
+									x-model.number="usuario.clienteInfo.pesoKg"
+									:class="erroresValidacion.pesoKg ? 'is-invalid' : ''">
+								<div class="invalid-feedback" x-show="erroresValidacion.pesoKg"
+									x-text="erroresValidacion.pesoKg"></div>
+							</div>
+						</div>
+
+						<!-- Selector Nutricionista -->
+						<div>
+							<label class="form-label">Nutricionista asignado</label>
+							<div class="input-group mb-3">
+								<input type="text" class="form-control main-color-light"
+									:value="nutricionistaSeleccionado 
+									? `${nutricionistaSeleccionado.nombre} ${nutricionistaSeleccionado.apellidos} (${nutricionistaSeleccionado.nutricionistaInfo?.especialidad || 'Sin especialidad'})`
+									: 'Ninguno'"
+									readonly />
+
+								<button type="button" class="btn btn-outline-primary"
+									@click="abrirModalSeleccionarNutricionista()">
+									<i class="bi bi-search"></i>
+								</button>
+							</div>
+
+							<input type="hidden"
+								x-model="usuario.clienteInfo.idNutricionista" />
+						</div>
+					</div>
+
+
+					<div class="text-end">
+						<button type="button" class="btn btn-secondary"
+							data-bs-dismiss="modal">Cancelar</button>
+						<button type="submit" class="btn btn-success">
+							<i class="bi bi-save me-1"></i> Guardar
+						</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- Modal Confirmar Eliminación -->
+<div class="modal fade" id="modalEliminarUsuario" tabindex="-1"
+	aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header bg-danger text-white">
+				<h5 class="modal-title">Confirmar eliminación</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+			</div>
+			<div class="modal-body">
+				¿Seguro que deseas eliminar el usuario? <strong x-text="usuario.id"></strong>?
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary"
+					data-bs-dismiss="modal">Cancelar</button>
+				<button type="button" class="btn btn-danger"
+					@click="eliminarUsuario()">
+					<i class="bi bi-trash me-1"></i> Eliminar
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Modal Seleccionar Nutricionista -->
+<div class="modal fade" id="modalSeleccionarNutricionista" tabindex="-1"
+	aria-hidden="true">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header main-color-light">
+				<h5 class="modal-title">Seleccionar nutricionista</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+			</div>
+
+			<div class="modal-body">
+				<input type="text" class="form-control mb-3"
+					placeholder="Buscar nutricionista..."
+					x-model="filtroNutricionistas">
+
+				<div class="table-responsive"
+					style="max-height: 400px; overflow-y: auto;">
+					<table class="table table-hover align-middle">
+						<thead class="main-color-light">
+							<tr>
+								<th>Nombre</th>
+								<th>Especialidad</th>
+								<th></th>
+							</tr>
+						</thead>
+						<tbody>
+							<template x-for="n in nutricionistasFiltrados()" :key="n.id">
+								<tr>
+									<td x-text="n.nombre + ' ' + n.apellidos"></td>
+									<td x-text="n.nutricionistaInfo.especialidad"></td>
+									<td class="text-center">
+										<button class="btn btn-sm btn-success"
+											@click="seleccionarNutricionista(n.id)">
+											<i class="bi bi-check-circle"></i>
+										</button>
+									</td>
+								</tr>
+							</template>
+
+							<tr x-show="nutricionistasFiltrados().length === 0">
+								<td colspan="3" class="text-center text-muted">No hay
+									coincidencias.</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary"
+					data-bs-dismiss="modal">Cerrar</button>
+			</div>
+		</div>
+	</div>
+</div>

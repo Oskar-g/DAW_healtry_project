@@ -20,21 +20,21 @@ public class AlimentoServiceImpl implements AlimentoService {
 	private final AlimentoRepository alimentoRepository;
 
 	@Override
-	public AlimentoDTO guardar(AlimentoDTO alimentoDTO) {
+	public AlimentoDTO guardar(final AlimentoDTO alimentoDTO) {
 		log.debug("ENTRADA guardar({})", alimentoDTO);
 
-		Alimento alimento = mapDtoToEntity(alimentoDTO);
+		var alimento = mapDtoToEntity(alimentoDTO);
 		alimento = alimentoRepository.save(alimento);
 
-		AlimentoDTO response = mapEntityToDto(alimento);
+		var response = mapEntityToDto(alimento);
 		log.debug("SALIDA guardar -> {}", response);
 		return response;
 	}
 
 	@Override
-	public void eliminar(Long id) {
+	public void eliminar(final Long id) {
 		log.debug("ENTRADA eliminar({})", id);
-		alimentoRepository.deleteById(id.intValue());
+		alimentoRepository.deleteById(id);
 		log.debug("SALIDA eliminar");
 	}
 
@@ -42,20 +42,20 @@ public class AlimentoServiceImpl implements AlimentoService {
 	public List<AlimentoDTO> listarTodos() {
 		log.debug("ENTRADA listarTodos()");
 
-		List<AlimentoDTO> lista = alimentoRepository.findAll().stream().map(this::mapEntityToDto).toList();
+		var lista = alimentoRepository.findAll().stream().map(this::mapEntityToDto).toList();
 
 		log.debug("SALIDA listarTodos -> {}", lista);
 		return lista;
 	}
 
 	@Override
-	public AlimentoDTO obtener(Long id) {
+	public AlimentoDTO obtener(final Long id) {
 		log.debug("ENTRADA obtenerAlimento({})", id);
 
-		Alimento alimento = alimentoRepository.findById(id.intValue())
+		var alimento = alimentoRepository.findById(id)
 				.orElseThrow(() -> new IllegalArgumentException("Alimento no encontrado: " + id));
 
-		AlimentoDTO response = mapEntityToDto(alimento);
+		var response = mapEntityToDto(alimento);
 		log.debug("SALIDA obtenerAlimento -> {}", response);
 		return response;
 	}
@@ -64,24 +64,14 @@ public class AlimentoServiceImpl implements AlimentoService {
 	// Métodos de mapeo manual con builder
 	// =========================
 
-	private Alimento mapDtoToEntity(AlimentoDTO dto) {
-		return Alimento.builder()
-				.id(dto.getId())
-				.nombre(dto.getNombre())
-				.proteinas(dto.getProteinas())
-				.grasas(dto.getGrasas())
-				.carbohidratos(dto.getCarbohidratos())
-				.build();
+	private Alimento mapDtoToEntity(final AlimentoDTO dto) {
+		return Alimento.builder().id(dto.getId()).nombre(dto.getNombre()).proteinas(dto.getProteinas())
+				.grasas(dto.getGrasas()).carbohidratos(dto.getCarbohidratos()).build();
 	}
 
-	private AlimentoDTO mapEntityToDto(Alimento entidad) {
-		return AlimentoDTO.builder()
-				.id(entidad.getId())
-				.nombre(entidad.getNombre())
-				.proteinas(entidad.getProteinas())
-				.grasas(entidad.getGrasas())
-				.carbohidratos(entidad.getCarbohidratos())
-				.build();
+	private AlimentoDTO mapEntityToDto(final Alimento entidad) {
+		return AlimentoDTO.builder().id(entidad.getId()).nombre(entidad.getNombre()).proteinas(entidad.getProteinas())
+				.grasas(entidad.getGrasas()).carbohidratos(entidad.getCarbohidratos()).build();
 	}
 
 }

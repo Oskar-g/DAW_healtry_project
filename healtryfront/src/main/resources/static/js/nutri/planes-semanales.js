@@ -1,25 +1,34 @@
 const planVacio = () => ({
-	id: null,
-	alias: null,
-	dias: [],
-	nutricionistaId: document.querySelector('[name="nutricionistaId"]').value
+    id: null,
+    alias: null,
+    dias: [],
+    idNutricionista: null,
 });
 function planSemanalApp() {
 	return {
 		dias: ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"],
 		todosLosTipos: ["Desayuno", "Almuerzo", "Comida", "Merienda", "Cena"],
 		tiposComida: ["Desayuno", "Almuerzo", "Comida", "Merienda", "Cena"],
-		plan: {}, //id, alias, dias, nutricionistaId
+
+		plan: {}, //id, alias, dias, idNutricionista
 		comidas: [],
 		diaSeleccionado: null,
-		tipoSeleccionado: null,
-		modalSeleccionar: new bootstrap.Modal(document.getElementById("modalSeleccionarComida")),
+		tipoComidaSeleccionada: null,
+		modalSeleccionarComida: new bootstrap.Modal(document.getElementById("modalSeleccionarComida")),
+
 		modalConfigComidas: new bootstrap.Modal(document.getElementById("modalConfigComidas")),
-		filtro: "",
+		filtroComidas: "",
+
+		modalPlanes: new bootstrap.Modal(document.getElementById("modalPlanes")),
+		planes: [],
+
+		modalConfirmarEliminar: new bootstrap.Modal(document.getElementById("modalConfirmarEliminar")),
+		planAEliminar: null,
 
 		init() {
 			this.inicializarPlan();
 			this.cargarComidas();
+			this.cargarClientes();
 		},
 
 		// -----------------------------------------------
@@ -29,12 +38,26 @@ function planSemanalApp() {
 		cargarComidas() {
 			apiSend(
 				{ url: `${apiUrl}/comidas` },
-				async (res) => (this.comidas = await res.json()),
+				async res => this.comidas = await res.json(),
 				(err) => mostrarToast(err.message, true)
 			);
 		},
 
+		cargarPlanes() {
+			const idNutricionista = document.querySelector('[name="idNutricionista"]').value;
+
+			apiSend(
+				{ url: `${apiUrl}/planes-semanales/nutricionistas/${idNutricionista}` },
+				async res => this.planes = await res.json(),
+				err => mostrarToast(err.message, true)
+			);
+		},
+
 		guardarPlan() {
+			console.log(this.plan);
+			const id = this.plan.id;
+			const idNutricionista = document.querySelector('[name="idNutricionista"]').value;
+			const alias = this.plan.alias;
 			const dias = this.dias.flatMap(dia =>
 				this.tiposComida
 					.filter(tipo => this.plan[dia][tipo])
@@ -46,18 +69,45 @@ function planSemanalApp() {
 			);
 
 			const payload = {
-				alias: this.plan.alias,
+				id,
+				idNutricionista,
+				alias,
 				dias
 			};
 
+			const isEdicion = this.plan.id !== null;
+			const method = isEdicion ? "PUT" : "POST";
+			const url = isEdicion
+				? `${apiUrl}/planes-semanales/${this.plan.id}`
+				: `${apiUrl}/planes-semanales`;
+
 			apiSend(
 				{
-					url: `${apiUrl}/planes-semanales`,
-					method: "POST",
+					url,
+					method,
 					body: JSON.stringify(payload),
 				},
-				async () => mostrarToast("Plan semanal guardado correctamente"),
+				async res => {
+					mostrarToast("Plan semanal guardado correctamente");
+					this.editarPlan(await res.json())
+				},
 				(err) => mostrarToast(err.message, true)
+			);
+		},
+
+
+		eliminarPlanConfirmado() {
+			apiSend(
+				{
+					url: `${apiUrl}/planes-semanales/${this.planAEliminar.id}`,
+					method: "DELETE"
+				},
+				async () => {
+					mostrarToast("Plan eliminado correctamente");
+					this.modalConfirmarEliminar.hide();
+					this.planes = this.planes.filter(p => p.id !== this.planAEliminar.id);
+				},
+				err => mostrarToast(err.message, true)
 			);
 		},
 
@@ -99,6 +149,55 @@ function planSemanalApp() {
 			mostrarToast("Tipos de comidas actualizados");
 		},
 
+		// -----------------------------------------------
+		// Botonera superior
+		// -----------------------------------------------
+		nuevoPlan() {
+			this.inicializarPlan();
+			mostrarToast("Plan reiniciado");
+		},
+
+		guardarComoCopia() {
+			this.plan.id = null;
+
+			this.guardarPlan();
+			mostrarToast("Plan guardado como copia");
+		},
+
+		editarPlan(plan, toast = false) {
+			console.log('antes plan', plan);
+			console.log('antes this.plan', this.plan);
+			this.inicializarPlan();
+			this.plan.id = plan.id;
+			this.plan.alias = plan.alias;
+
+			// reconstruir dias
+			plan.dias.forEach(d => {
+				this.plan[d.dia][d.tipoComida] = d.comida;
+			});
+
+			this.modalPlanes.hide();
+			if (toast) {
+				mostrarToast("Plan cargado para edición");
+			}
+			console.log('despues plan', plan);
+			console.log('despues this.plan', this.plan);
+
+		},
+
+		// -----------------------------------------------
+		// Modales
+		// -----------------------------------------------
+
+		abrirModalPlanes() {
+			this.cargarPlanes();
+			this.modalPlanes.show();
+		},
+
+		solicitarEliminarPlan(plan) {
+			this.planAEliminar = plan;
+			this.modalConfirmarEliminar.show();
+		},
 
 		// -----------------------------------------------
 		// Selector Comidas
@@ -106,24 +205,43 @@ function planSemanalApp() {
 
 		abrirSelectorComida(dia, tipo) {
 			this.diaSeleccionado = dia;
-			this.tipoSeleccionado = tipo;
-			this.filtro = "";
-			this.modalSeleccionar.show();
+			this.tipoComidaSeleccionada = tipo;
+			this.filtroComidas = "";
+			this.modalSeleccionarComida.show();
 		},
 
 		comidasFiltradas() {
-			const q = this.filtro.toLowerCase().trim();
+			const q = this.filtroComidas.toLowerCase().trim();
 			return this.comidas.filter(c => c.nombre.toLowerCase().includes(q));
 		},
 
 		asignarComida(comida) {
-			this.plan[this.diaSeleccionado][this.tipoSeleccionado] = comida;
-			this.modalSeleccionar.hide();
-			mostrarToast(`Comida asignada al ${this.tipoSeleccionado} del ${this.diaSeleccionado}`);
+			this.plan[this.diaSeleccionado][this.tipoComidaSeleccionada] = comida;
+			this.modalSeleccionarComida.hide();
+			mostrarToast(`Comida asignada al ${this.tipoComidaSeleccionada} del ${this.diaSeleccionado}`);
 		},
 
 		quitarComida(dia, tipo) {
 			this.plan[dia][tipo] = null;
 		},
+
+		// -----------------------------------------------
+		// Validaciones
+		// -----------------------------------------------
+
+		validPlan() {
+			if (!this.plan) return false;
+
+			if (!this.plan.alias || this.plan.alias.trim().length === 0) return false;
+
+			const tieneComidas = this.dias.some(dia =>
+				this.tiposComida.some(tipo => this.plan[dia][tipo])
+			);
+
+			if (!tieneComidas) return false;
+
+			return true;
+		}
+
 	};
 }

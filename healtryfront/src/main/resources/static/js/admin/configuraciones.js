@@ -13,14 +13,14 @@ function configuracionesApp() {
 		modalEliminar: new bootstrap.Modal(document.getElementById("modalEliminarConfig")),
 
 		init() {
-			this.cargarParametros();
+			this.cargarConfiguraciones();
 		},
 
 		// ---------------------------------------
 		// REST
 		// ---------------------------------------
 
-		cargarParametros() {
+		cargarConfiguraciones() {
 			apiSend(
 				{
 					url: `${apiUrl}/configuraciones`,
@@ -30,7 +30,7 @@ function configuracionesApp() {
 			);
 		},
 
-		guardarParametro() {
+		guardarConfiguracion() {
 			apiSend(
 				{
 					url: `${apiUrl}/configuraciones`,
@@ -46,23 +46,23 @@ function configuracionesApp() {
 					);
 				},
 				err => mostrarToast(err.message, true),
-				() => this.cargarParametros(),
+				() => this.cargarConfiguraciones(),
 			);
 		},
 
-		eliminarParametro() {
+		eliminarConfiguracion() {
 			apiSend(
 				{
 					url: `${apiUrl}/configuraciones/${this.configuracion.clave}`,
 					method: "DELETE",
 				},
 				async res => {
-					this.cargarParametros();
+					this.cargarConfiguraciones();
 					this.modalEliminar.hide();
 					mostrarToast("Parámetro eliminado correctamente");
 				},
 				err => mostrarToast(err.message, true),
-				() => this.cargarParametros(),
+				() => this.cargarConfiguraciones(),
 			)
 		},
 

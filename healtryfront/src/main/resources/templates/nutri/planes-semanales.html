@@ -1,15 +1,28 @@
-<div layout:decorate="~{layouts/main :: layout(sidebar='nutri')}" layout:fragment="contenido">
+<div layout:decorate="~{layouts/main :: layout(sidebar='nutri', title='Healtry - Nutricionista:Planes Semanales')}"
+	layout:fragment="contenido">
 	<script th:src="@{/js/nutri/planes-semanales.js}"></script>
 
 	<div class="container mt-4" x-data="planSemanalApp()" x-init="init()">
 		<div class="d-flex justify-content-between align-items-center mb-3">
 			<h3 class="fw-semibold">Plan Semanal de Comidas</h3>
-			<div>
-				<button class="btn btn-outline-secondary me-2" @click="abrirConfigComidas()">
+			<div class="d-flex flex-wrap gap-2">
+				<button class="btn btn-primary" @click="abrirModalPlanes()">
+					<i class="bi bi-search"></i> Buscar plan
+				</button>
+				<button class="btn btn-outline-secondary"
+					@click="abrirConfigComidas()">
 					<i class="bi bi-gear"></i> Configurar comidas
 				</button>
-				<button class="btn btn-success" @click="guardarPlan()">
+				<button class="btn btn-success" @click="guardarPlan()"
+					:disabled="!validPlan()">
 					<i class="bi bi-save me-1"></i> Guardar plan
+				</button>
+				<button class="btn btn-warning" @click="nuevoPlan()">
+					<i class="bi bi-file-earmark-plus"></i> Nuevo plan
+				</button>
+				<button class="btn btn-info" @click="guardarComoCopia()"
+					x-show="plan.id !== null">
+					<i class="bi bi-files"></i> Guardar como copia
 				</button>
 			</div>
 		</div>
@@ -19,13 +32,16 @@
 			<div class="card-body">
 				<div class="row align-items-center">
 					<div class="col-md-3">
-						<label class="form-label fw-semibold mb-0">Nombre del plan semanal</label>
+						<label class="form-label fw-semibold mb-0">Nombre del plan
+							semanal</label>
 					</div>
-					<div class="col-md-6">
-						<input type="hidden" th:value="${session?.usuarioLogueado?.id}" name="nutricionistaId" />
 
-						<input type="text" class="form-control main-color-light"
-							placeholder="Ej: Plan equilibrado de otoño" x-model="plan.alias" required>
+					<div class="col-md-6">
+						<input type="hidden" th:value="${session?.usuarioLogueado?.id}"
+							name="idNutricionista" /> <input type="text"
+							class="form-control main-color-light"
+							placeholder="Ej: Plan equilibrado de otoño" x-model="plan.alias"
+							required />
 					</div>
 				</div>
 			</div>
@@ -50,12 +66,13 @@
 							<th x-text="tipo" class="main-color-light text-start ps-3"></th>
 							<template x-for="dia in dias" :key="dia + tipo">
 								<td>
-									<div class="d-flex flex-column align-items-center justify-content-center">
+									<div
+										class="d-flex flex-column align-items-center justify-content-center">
 										<template x-if="plan[dia][tipo]">
 											<div>
 												<strong x-text="plan[dia][tipo].nombre"></strong>
-												<div class="text-muted small" x-text="plan[dia][tipo].kcal + ' kcal'">
-												</div>
+												<div class="text-muted small"
+													x-text="plan[dia][tipo].kcal + ' kcal'"></div>
 											</div>
 										</template>
 										<template x-if="!plan[dia][tipo]">
@@ -89,6 +106,6 @@
 			</table>
 		</div>
 		<!-- Modales -->
-		<div th:replace="~{fragments/modales-planes-semanales}"></div>
+		<div th:replace="~{nutri/modales/modales-planes-semanales}"></div>
 	</div>
 </div>

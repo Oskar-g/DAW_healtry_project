@@ -48,8 +48,8 @@
 			<i class="bi bi-people"></i> Fichas de Clientes
 		</a>
 		<a class="nav-link" th:classappend="${request.requestURI.contains('/nutri/planesejercicio')} ? ' active'"
-			th:href="@{/nutri/planesejercicio}">
-			<i class="bi bi-person-walking"></i> Planes de ejercicio
+			th:href="@{/nutri/dietas}">
+			<i class="bi bi-person-heart"></i> Asignación de dietas
 		</a>
 		<a class="nav-link" th:classappend="${request.requestURI.contains('/nutri/planes-semanales')} ? ' active'"
 			th:href="@{/nutri/planes-semanales}">
@@ -74,9 +74,34 @@
 	</nav>
 </div>
 
+<!-- USUARIO -->
+<div th:fragment="cliente-sidebar" class="sidebar d-flex flex-column">
+	<div class="user-info">
+		<img th:src="@{/images/avatar.png}" alt="Usuario">
+		<div>
+			<strong th:text="${session?.usuarioLogueado?.nombre + ' ' + session?.usuarioLogueado?.apellidos}">
+				Nombre Apellido
+			</strong>
+		</div>
+	</div>
+	<nav class="nav flex-column p-3">
+		<a class="nav-link" th:classappend="${request.requestURI.equals('/cliente/')} ? ' active'" th:href="@{/home}">
+			<i class="bi bi-house"></i> Inicio
+		</a>
+		<a class="nav-link" th:classappend="${request.requestURI.contains('cliente')} ? ' active'"
+			th:href="@{/home}">
+			<i class="bi bi-people"></i> Mi dieta
+		</a>
+		<a disabled class="nav-link" th:classappend="${request.requestURI.contains('/cliente/planesejercicio')} ? ' active'"
+			th:href="@{/home}">
+			<i class="bi bi-person-heart"></i> Plan de ejercicio
+		</a>
+
+		<div th:replace="~{this :: sidebar-footer}"></div>
+
+	</nav>
+</div>
 <div th:fragment="sidebar-footer" class="mt-auto p-3 text-center text-muted small border-top">
 	&copy; 2025 Healtry<br>
 	Contacto: <a href="mailto:soporte@healtry.com">soporte@healtry.com</a>
 </div>
-
-<!-- USUARIO -->

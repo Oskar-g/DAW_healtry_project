@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<div
+	layout:decorate="~{layouts/main :: layout(sidebar='cliente', title='Healtry - Usuario:Home', css='clientemain')}"
+	layout:fragment="contenido">
+
+	<script th:src="@{/js/cliente/dieta-cliente.js}"></script>
+
+	<div class="container mt-4" x-data="dietaClienteApp()" x-init="init()">
+
+		<!-- ------------------------------- -->
+		<!-- BOTONERA SUPERIOR -->
+		<!-- ------------------------------- -->
+		<div class="d-flex justify-content-center gap-4 mb-4">
+
+			<input type="hidden" th:value="${session?.usuarioLogueado?.id}"
+				name="idCliente" />
+
+			<div class="botones-dieta-container">
+
+				<button class="btn btn-lg btn-dieta btn-lista-compra"
+					@click="abrirListaCompra()">
+					<img src="/images/icons/lista-compra.png" class="me-2" style="height: 32px;">
+					Lista de la compra
+				</button>
+
+				<button class="btn btn-lg btn-dieta btn-comida-actual"
+					@click="abrirComidaActual()">
+					<img src="/images/icons/que-me-toca.png" class="me-2" style="height: 32px;">
+					¿Qué me toca ahora?
+				</button>
+
+			</div>
+
+		</div>
+
+		<!-- ------------------------------- -->
+		<!-- TABLA DE DIETA ACTUAL -->
+		<!-- ------------------------------- -->
+		<div class="table-responsive mt-4">
+
+			<table class="table table-bordered align-middle text-center">
+				<thead class="main-color-light">
+					<tr>
+						<th>Comida / Día</th>
+						<template x-for="dia in dias" :key="dia">
+							<th x-text="dia"></th>
+						</template>
+					</tr>
+				</thead>
+
+				<tbody>
+					<template x-for="tipo in tiposComida" :key="tipo">
+						<tr>
+							<th class="main-color-light text-start ps-3" x-text="tipo"></th>
+
+							<template x-for="dia in dias" :key="dia + tipo">
+								<td :class="resaltarCelda(dia, tipo)"
+									@click="abrirComida(dia, tipo)" style="cursor: pointer">
+									<template x-if="existeDieta(dia,tipo)">
+										<div>
+											<strong x-text="dieta[dia][tipo].nombre"></strong>
+											<div class="text-muted small"
+												x-text="dieta[dia][tipo].kcal + ' kcal'"></div>
+										</div>
+									</template>
+
+									<template x-if="!existeDieta(dia,tipo)">
+										<span class="text-muted small fst-italic">—</span>
+									</template>
+
+								</td>
+							</template>
+
+						</tr>
+					</template>
+				</tbody>
+			</table>
+
+		</div>
+
+		<!-- Modales -->
+		<div th:replace="~{cliente/modales/modales-dieta-cliente}"></div>
+
+	</div>

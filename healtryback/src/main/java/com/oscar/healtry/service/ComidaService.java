@@ -15,9 +15,9 @@ public interface ComidaService {
 
 	List<ComidaDTO> listarTodos();
 
-	ComidaDTO editar(ComidaDTO alimentoDTO);
+	ComidaDTO obtener(Long id);
 
-	ComidaDTO obtener(Integer id);
+	ComidaDTO editar(ComidaDTO alimentoDTO);
 
 	void eliminar(Long id);
 
@@ -37,8 +37,8 @@ public interface ComidaService {
 						.stream()
 						.map(alimento -> ComidaAlimento.builder()
 								.id(ComidaAlimentoId.builder()
-										.comidaId(entity.getId())
-										.alimentoId(alimento.getId())
+										.idComida(entity.getId())
+										.idAlimento(alimento.getId())
 										.build())
 								.comida(entity)
 								.alimento(AlimentoService.mapToEntity(alimento))

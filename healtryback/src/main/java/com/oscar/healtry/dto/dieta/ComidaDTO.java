@@ -20,7 +20,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class ComidaDTO {
 
-	private Integer id;
+	private Long id;
 
 	@NotBlank
 	private String nombre;

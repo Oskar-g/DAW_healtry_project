@@ -1,22 +1,22 @@
-const comidaVacio = {
+const comidaVacio = () => ({
 	id: null,
 	nombre: "",
 	alimentos: [] // { {alimento}, gramos }
-};
-const selectorAlimentoVacio = {
+});
+const selectorAlimentoVacio = () => ({
 	gramos: 100,
 	alimento: {},
 	query: "",
 	filtrados: [],
 	mostrando: false
-};
+});
 
 function comidasApp() {
 	return {
 		alimentos: [],
 		selectorAlimentos: [],
 		comidas: [],
-		comida: { ...comidaVacio },
+		comida: { ...comidaVacio() },
 		modoEdicion: false,
 		modalAlimento: new bootstrap.Modal(document.getElementById("modalGuardarComida")),
 		modalEliminar: new bootstrap.Modal(document.getElementById("modalEliminarComida")),
@@ -81,7 +81,7 @@ function comidasApp() {
 		// -----------------------------------------------
 
 		agregarAlimento() {
-			this.selectorAlimentos.push({ ...selectorAlimentoVacio });
+			this.selectorAlimentos.push({ ...selectorAlimentoVacio() });
 		},
 
 		eliminarAlimento(index) {
@@ -134,7 +134,7 @@ function comidasApp() {
 		// -----------------------------------------------
 
 		abrirModalNuevo() {
-			this.comida = { ...comidaVacio };
+			this.comida = { ...comidaVacio() };
 			this.selectorAlimentos = [];
 			this.modoEdicion = false;
 			this.modalAlimento.show();
@@ -143,7 +143,7 @@ function comidasApp() {
 		abrirModalEditar(comida) {
 			this.comida = { ...comida };
 			this.selectorAlimentos = comida.alimentos.map(a => ({
-				...selectorAlimentoVacio,
+				...selectorAlimentoVacio(),
 				gramos: a.gramos,
 				alimento: a,
 				query: a.nombre,

@@ -10,35 +10,35 @@ import com.oscar.healtry_front.dto.LoginResponseDTO;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 
 @Component
 public class AuthInterceptor implements HandlerInterceptor {
 
 	private static final String RUTA_RAIZ = "/";
-	private static final Set<String> RUTAS_COMUNES_EXCLUIDAS = Set.of("/", "/logout");
+	private static final Set<String> RUTAS_COMUNES_EXCLUIDAS = Set
+			.of(RUTA_RAIZ, "/logout", "/renovar-codigo", "/renovar-pass");
 	private static final Map<String, String> ROL_PREFIX = Map
-			.of("ADMINISTRACION", "/admin/", "NUTRICIONISTA", "/nutri/", "USUARIO", "/user/");
+			.of("ADMINISTRACION", "/admin/", "NUTRICIONISTA", "/nutri/", "CLIENTE", "/cliente/");
 
 	@Override
-	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
+	public boolean preHandle(final HttpServletRequest request, final HttpServletResponse response, final Object handler)
 			throws Exception {
-		HttpSession session = request.getSession(false);
+		var session = request.getSession(false);
+		var path = request.getRequestURI();
 
-		if (null == session || null == session.getAttribute("usuarioLogueado")) {
+		if (RUTA_RAIZ.equals(path) && (null == session || null == session.getAttribute("usuarioLogueado"))) {
 			response.sendRedirect("/login");
 			return false;
 		}
 
-		String path = request.getRequestURI();
 		if (RUTAS_COMUNES_EXCLUIDAS.stream().anyMatch(path::equals)) {
 			return true;
 		}
 
-		LoginResponseDTO usuario = (LoginResponseDTO) session.getAttribute("usuarioLogueado");
-		String rol = usuario.getRol();
+		var usuario = (LoginResponseDTO) session.getAttribute("usuarioLogueado");
+		var rol = usuario.getRol();
 
-		String permitido = ROL_PREFIX.get(rol);
+		var permitido = ROL_PREFIX.get(rol);
 		if (null == permitido || !path.startsWith(permitido)) {
 			response.sendRedirect(RUTA_RAIZ);
 			return false;

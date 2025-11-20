@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 import com.oscar.healtry.model.Rol;
 
 @Repository
-public interface RolRepository extends ListCrudRepository<Rol, Integer> {
+public interface RolRepository extends ListCrudRepository<Rol, Long> {
 }

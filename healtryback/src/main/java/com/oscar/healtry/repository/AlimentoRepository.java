@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 import com.oscar.healtry.model.Alimento;
 
 @Repository
-public interface AlimentoRepository extends ListCrudRepository<Alimento, Integer> {
+public interface AlimentoRepository extends ListCrudRepository<Alimento, Long> {
 }

@@ -17,5 +17,5 @@ public class PlanSemanalDTO {
 	private Long id;
 	private String alias;
 	private List<PlanDiaDTO> dias;
-	private Integer nutriId;
+	private Long idNutricionista;
 }
