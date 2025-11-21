@@ -1,12 +1,26 @@
-<div layout:decorate="~{layouts/main :: layout(sidebar='nutri', title='Healtry - Nutricionista:Comidas')}" layout:fragment="contenido">
+<div
+	layout:decorate="~{layouts/main :: layout(sidebar='nutri', title='Healtry - Nutricionista:Comidas')}"
+	layout:fragment="contenido">
 	<script th:src="@{/js/nutri/comidas.js}"></script>
 
 	<div class="container mt-4" x-data="comidasApp()" x-init="init()">
 		<div class="d-flex justify-content-between align-items-center mb-3">
 			<h3 class="fw-semibold">Administración de Comidas</h3>
-			<button class="btn btn-success" @click="abrirModalNuevo()">
-				<i class="bi bi-plus-circle me-1"></i> Nueva comida
-			</button>
+		</div>
+		<div class="row mb-3">
+			<div class="col-md-4">
+				<div class="input-group">
+					<span class="input-group-text"><i class="bi bi-search"></i></span>
+					<input type="text" class="form-control"
+						placeholder="Buscar comida por nombre o alimento..." x-model="filtro">
+				</div>
+			</div>
+
+			<div class="col-md-8 d-flex justify-content-end">
+				<button class="btn btn-success" @click="abrirModalNuevo()">
+					<i class="bi bi-plus-circle me-1"></i> Nueva Comida
+				</button>
+			</div>
 		</div>
 
 		<!-- Tabla -->
@@ -21,7 +35,7 @@
 					</tr>
 				</thead>
 				<tbody>
-					<template x-for="com in comidas" :key="com.id">
+					<template x-for="com in comidasFiltradas()" :key="com.id">
 						<tr>
 							<td x-text="com.nombre"></td>
 							<td>
@@ -34,10 +48,12 @@
 							<td x-text="com.kcal"></td>
 							<td class="text-center">
 								<div class="btn-group" role="group">
-									<button class="btn btn-sm btn-primary me-1" @click="abrirModalEditar(com)">
+									<button class="btn btn-sm btn-primary me-1"
+										@click="abrirModalEditar(com)">
 										<i class="bi bi-pencil"></i>
 									</button>
-									<button class="btn btn-sm btn-danger" @click="confirmarEliminar(com)">
+									<button class="btn btn-sm btn-danger"
+										@click="confirmarEliminar(com)">
 										<i class="bi bi-trash"></i>
 									</button>
 								</div>
@@ -45,7 +61,8 @@
 						</tr>
 					</template>
 					<tr x-show="comidas.length === 0">
-						<td colspan="4" class="text-center text-muted">No hay comidas registrados.</td>
+						<td colspan="4" class="text-center text-muted">No hay comidas
+							registrados.</td>
 					</tr>
 				</tbody>
 			</table>

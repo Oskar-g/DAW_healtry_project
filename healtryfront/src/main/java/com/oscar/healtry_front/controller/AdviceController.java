@@ -7,8 +7,8 @@ import jakarta.servlet.http.HttpServletRequest;
 
 public class AdviceController {
 
-    @ModelAttribute("request")
-    public void añadirRequestModel(Model model, HttpServletRequest request) {
+	@ModelAttribute("request")
+	public void añadirRequestModel(Model model, HttpServletRequest request) {
 		model.addAttribute("request", request);
-    }
+	}
 }

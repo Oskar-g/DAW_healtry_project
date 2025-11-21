@@ -61,8 +61,7 @@ public class LoginController {
 					.uri("auth/login")
 					.bodyValue(request)
 					.retrieve()
-					.onStatus(
-							HttpStatusCode::isError,
+					.onStatus(HttpStatusCode::isError,
 							clientResponse -> clientResponse.bodyToMono(elementTypeRef)
 									.flatMap(errorBody -> Mono.error(new RuntimeException(errorBody.getMessage()))))
 					.bodyToMono(elementTypeRef)

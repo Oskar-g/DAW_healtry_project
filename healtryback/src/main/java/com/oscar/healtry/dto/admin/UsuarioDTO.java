@@ -64,6 +64,9 @@ public class UsuarioDTO {
 		@Positive
 		private BigDecimal pesoKg;
 		private Long idNutricionista;
-		
+
+		public int getEdad() {
+			return LocalDate.now().getYear() - fechaNacimiento.getYear();
+		}
 	}
 }

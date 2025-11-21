@@ -1,3 +1,4 @@
+
 package com.oscar.healtry_front.config;
 
 import java.util.Map;
@@ -33,6 +34,11 @@ public class AuthInterceptor implements HandlerInterceptor {
 
 		if (RUTAS_COMUNES_EXCLUIDAS.stream().anyMatch(path::equals)) {
 			return true;
+		}
+
+		if (null == session || null == session.getAttribute("usuarioLogueado")) {
+			response.sendRedirect("/login");
+			return false;
 		}
 
 		var usuario = (LoginResponseDTO) session.getAttribute("usuarioLogueado");

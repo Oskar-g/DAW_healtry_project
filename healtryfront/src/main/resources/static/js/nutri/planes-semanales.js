@@ -28,7 +28,6 @@ function planSemanalApp() {
 		init() {
 			this.inicializarPlan();
 			this.cargarComidas();
-			this.cargarClientes();
 		},
 
 		// -----------------------------------------------

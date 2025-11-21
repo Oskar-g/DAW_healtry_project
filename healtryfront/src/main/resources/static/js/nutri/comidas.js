@@ -17,6 +17,7 @@ function comidasApp() {
 		selectorAlimentos: [],
 		comidas: [],
 		comida: { ...comidaVacio() },
+		filtro: "",
 		modoEdicion: false,
 		modalAlimento: new bootstrap.Modal(document.getElementById("modalGuardarComida")),
 		modalEliminar: new bootstrap.Modal(document.getElementById("modalEliminarComida")),
@@ -58,7 +59,7 @@ function comidasApp() {
 				},
 				async (res) => {
 					this.init();
-					mostrarToast(this.modoEdicion ? "Alimento actualizado" : "Alimento creado");
+					mostrarToast(this.modoEdicion ? "Comida actualizada" : "Comida creada");
 				},
 				(err) => mostrarToast(err.message, true)
 			);
@@ -70,9 +71,24 @@ function comidasApp() {
 				{ url: `${apiUrl}/comidas/${this.comida.id}`, method: "DELETE" },
 				async (res) => {
 					this.init();
-					mostrarToast("Alimento eliminado correctamente");
+					mostrarToast("Comida eliminada correctamente");
 				},
 				(err) => mostrarToast(err.message, true)
+			);
+		},
+
+		// filtra por nombre de comida o por el nombre de alguno de sus alimentos
+		comidasFiltradas() {
+			if (!this.filtro.trim()) return this.comidas;
+
+			const f = this.filtro.toLowerCase();
+
+			return this.comidas.filter(c =>
+				c.nombre.toLowerCase().includes(f)
+				||
+				(c.alimentos && c.alimentos.some(a =>
+					a.nombre.toLowerCase().includes(f)
+				))
 			);
 		},
 

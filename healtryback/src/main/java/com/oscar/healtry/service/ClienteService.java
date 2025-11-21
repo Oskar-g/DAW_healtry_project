@@ -19,12 +19,14 @@ public interface ClienteService {
 
 	void parchear(UsuarioDTO cliente, Cliente entidad);
 
-	public static UsuarioDTO mapToDto(Cliente entidad) {
+	void eliminar(Long id);
+
+	public static UsuarioDTO mapToDto(final Cliente entidad) {
 		if (null == entidad || null == entidad.getUsuario()) {
 			return null;
 		}
 
-		Long idNutricionista = Optional.ofNullable(entidad.getNutricionista()).map(e -> e.getId()).orElse(null);
+		var idNutricionista = Optional.ofNullable(entidad.getNutricionista()).map(e -> e.getId()).orElse(null);
 		ClienteInfo clienteInfo = ClienteInfo.builder()
 				.idNutricionista(idNutricionista)
 				.alturaCm(entidad.getAlturaCm())
@@ -33,16 +35,15 @@ public interface ClienteService {
 				.sexo(entidad.getSexo())
 				.build();
 
-		return UsuarioService.mapToDto(entidad.getUsuario()).toBuilder()
-				.clienteInfo(clienteInfo).build();
+		return UsuarioService.mapToDto(entidad.getUsuario()).toBuilder().clienteInfo(clienteInfo).build();
 	}
 
-	public static Cliente mapToEntity(UsuarioDTO dto) {
+	public static Cliente mapToEntity(final UsuarioDTO dto) {
 		if (null == dto || null == dto.getClienteInfo()) {
 			return null;
 		}
 
-		ClienteInfo clienteInfo = dto.getClienteInfo();
+		var clienteInfo = dto.getClienteInfo();
 
 		return Cliente.builder()
 				.nutricionista(Nutricionista.builder().id(clienteInfo.getIdNutricionista()).build())

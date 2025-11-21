@@ -1,0 +1,58 @@
+<div
+	layout:decorate="~{layouts/main :: layout(sidebar='nutri', title='Healtry - Nutricionista: Clientes')}"
+	layout:fragment="contenido">
+	<script th:src="@{/js/nutri/clientes.js}"></script>
+	<div class="container mt-4" x-init="init()" x-data="clientesApp()">
+		<div class="d-flex justify-content-between align-items-center mb-3">
+			<h3 class="fw-semibold">Administración de Clientes</h3>
+			<button class="btn btn-success" @click="abrirModalNuevo()">
+				<i class="bi bi-plus-circle me-1"></i> Nuevo Cliente
+			</button>
+		</div>
+		<!-- Tabla -->
+		<input type="hidden" th:value="${session?.usuarioLogueado?.id}" name="idNutricionista" />
+		<div class="table-responsive">
+			<table class="table table-bordered align-middle">
+				<thead class="main-color-light">
+					<tr>
+						<th>nombre</th>
+						<th>apellidos</th>
+						<th>correo</th>
+						<th>Edad</th>
+						<th>Sexo</th>
+						<th style="width: 120px">Acciones</th>
+					</tr>
+				</thead>
+				<tbody>
+					<template x-for="u in clientes" :key="u.id">
+						<tr>
+							<td x-text="u.nombre"></td>
+							<td x-text="u.apellidos"></td>
+							<td x-text="u.correo"></td>
+							<td x-text="u.clienteInfo.edad"></td>
+							<td x-text="u.clienteInfo.sexo"></td>
+							<td class="text-center">
+								<div class="btn-group" role="group">
+									<button class="btn btn-sm btn-primary me-1"
+										@click="abrirModalEditar(u)">
+										<i class="bi bi-pencil"></i>
+									</button>
+									<button class="btn btn-sm btn-danger"
+										@click="confirmarEliminar(u)">
+										<i class="bi bi-trash"></i>
+									</button>
+								</div>
+							</td>
+						</tr>
+					</template>
+					<tr x-show="clientes.length === 0">
+						<td colspan="5" class="text-center text-muted">No hay
+							clientes registrados.</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<!-- Modales -->
+		<div th:replace="~{nutri/modales/modales-clientes}"></div>
+	</div>
+</div>

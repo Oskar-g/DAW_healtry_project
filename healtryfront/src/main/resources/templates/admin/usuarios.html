@@ -1,4 +1,6 @@
-<div layout:decorate="~{layouts/main :: layout(sidebar='admin')}" layout:fragment="contenido">
+<div 
+	layout:decorate="~{layouts/main :: layout(sidebar='admin', title='Healtry - Administrador: Usuarios')}"
+layout:fragment="contenido">
 	<script th:src="@{/js/admin/usuarios.js}"></script>
 	<div class="container mt-4" x-init="init()" x-data="usuariosApp()">
 		<div class="d-flex justify-content-between align-items-center mb-3">

@@ -1,5 +1,5 @@
-<div
-	layout:decorate="~{layouts/main :: layout(sidebar='nutri', title='Healtry - Nutricionista: Dietas')}"
+<div 
+layout:decorate="~{layouts/main :: layout(sidebar='nutri', title='Healtry - Nutricionista: Dietas')}"
 	layout:fragment="contenido">
 	<script th:src="@{/js/nutri/dietas.js}"></script>
 
@@ -45,7 +45,7 @@
 								<tr>
 									<td>
 										<div>
-											<strong x-text="d.plan?.alias || ('Plan ' + d.idPlan)"></strong>
+											<strong x-text="nombrePlan(d)"></strong>
 										</div>
 										<div class="small text-muted" x-text="'id: ' + d.id"></div>
 									</td>

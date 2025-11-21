@@ -274,14 +274,10 @@ function usuariosApp() {
 			this.modalUsuario.show();
 		},
 
-		onRolChange() {
-
-		},
-
 		abrirModalEditar(usuario) {
 			this.erroresValidacion = {};
 
-			this.usuario = JSON.parse(JSON.stringify(usuario)); // deep copy
+			this.usuario = JSON.parse(JSON.stringify(usuario)); 
 
 			if (!this.usuario.clienteInfo) this.usuario.clienteInfo = { ...clienteInfoVacio() };
 			if (!this.usuario.nutricionistaInfo) this.usuario.nutricionistaInfo = { ...nutricionistaInfoVacio() };

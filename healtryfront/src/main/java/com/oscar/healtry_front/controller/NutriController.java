@@ -11,22 +11,28 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class NutriController extends AdviceController {
 
+	@GetMapping("/nutri/clientes")
+	public String clientes(final Model model, final HttpSession session) {
+		return "nutri/clientes";
+	}
+
 	@GetMapping("/nutri/comidas")
-	public String comidas(Model model, HttpSession session) {
+	public String comidas(final Model model, final HttpSession session) {
 		return "nutri/comidas";
 	}
 
 	@GetMapping("/nutri/alimentos")
-	public String alimentos(Model model, HttpSession session) {
+	public String alimentos(final Model model, final HttpSession session) {
 		return "nutri/alimentos";
 	}
-	
+
 	@GetMapping("/nutri/planes-semanales")
-	public String planesSemanales(Model model, HttpSession session) {
+	public String planesSemanales(final Model model, final HttpSession session) {
 		return "nutri/planes-semanales";
 	}
+
 	@GetMapping("/nutri/dietas")
-	public String dietas(Model model, HttpSession session) {
+	public String dietas(final Model model, final HttpSession session) {
 		return "nutri/dietas";
 	}
 }

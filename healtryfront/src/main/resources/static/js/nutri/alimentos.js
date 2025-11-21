@@ -10,6 +10,7 @@ function alimentosApp() {
 	return {
 		alimentos: [],
 		alimento: { ...alimentoVacio },
+		filtro: "",
 		modoEdicion: false,
 		modalAlimento: new bootstrap.Modal(document.getElementById("modalGuardarAlimento")),
 		modalEliminar: new bootstrap.Modal(document.getElementById("modalEliminarAlimento")),
@@ -62,6 +63,13 @@ function alimentosApp() {
 					this.cargarAlimentos();
 				},
 				(err) => mostrarToast(err.message, true)
+			);
+		},
+
+		alimentosFiltrados() {
+			if (!this.filtro.trim()) return this.alimentos;
+			return this.alimentos.filter(a =>
+				a.nombre.toLowerCase().includes(this.filtro.toLowerCase())
 			);
 		},
 
