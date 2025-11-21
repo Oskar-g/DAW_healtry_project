@@ -4,22 +4,29 @@ INSERT INTO `configuraciones` (`clave`, `valor`, `tipo`, `descripcion`) VALUES
 ('AAAAA', 'AA', 'AA', 'AAA'),
 ('TITULO', 'Healtry', 'string', 'poseso');
 
+
 INSERT INTO `roles` (`id`, `nombre`) VALUES
 (1, 'ADMINISTRACION'),
 (2, 'NUTRICIONISTA'),
 (3, 'CLIENTE');
 
+
 INSERT INTO `usuarios` (`id`, `id_rol`, `nombre`, `apellidos`, `correo`, `contrasena`, `activo`) VALUES
-(1, 1, 'otro', 'mismo', 'admin@healtry.com', '1234', 1),
-(2, 2, 'yo', 'mismo', 'oscar@healtry.com', '1234', 1),
-(3, 3, 'cliente', 'no sé', 'cliente@healtry.com', '1234', 1);
+(1, 1, 'Admin', 'SuperAdmin', 'admin@healtry.com', '12345', 1),
+(2, 2, 'Óscar', 'Gómez', 'oscar@healtry.com', '123456', 1),
+(3, 3, 'Rosa', 'Matute', 'cliente@healtry.com', '1234', 1),
+(4, 3, 'Ana', 'García Mayo', 'ana@gmail.com', NULL, 1),
+(5, 3, 'Mario', 'Yuste', 'marioy@outlook.com', NULL, 1);
+
 
 INSERT INTO `nutricionistas` (`id`, `especialidad`, `experiencia_anios`) VALUES 
 (2, 'Master and commander', 1000);
 
-INSERT INTO `clientes` (`id`, `id_nutricionista`, `fecha_nacimiento`, `sexo`, `altura_cm`, `peso_kg`) VALUES
-(3, 2, '1990-11-21', 'M', 151.00, 201.00);
 
+INSERT INTO `clientes` (`id`, `id_nutricionista`, `fecha_nacimiento`, `sexo`, `altura_cm`, `peso_kg`) VALUES
+(3, 2, '1990-11-21', 'M', 173.00, 64.00),
+(4, 2, '2004-12-21', 'M', 170.00, 79.00),
+(5, 2, '2004-05-08', 'H', 195.00, 139.00);
 
 
 INSERT INTO alimentos (nombre, proteinas, grasas, carbohidratos) VALUES
@@ -94,9 +101,6 @@ INSERT INTO alimentos (nombre, proteinas, grasas, carbohidratos) VALUES
 ('Salsa de soja', 6.0, 0.0, 4.9),
 ('Vinagre', 0.0, 0.0, 0.3);
 
--- =====================================
--- INSERTS COMIDAS
--- =====================================
 
 INSERT INTO comidas (id, nombre) VALUES
 (1, 'Tostadas con aguacate y huevo'),
@@ -130,9 +134,6 @@ INSERT INTO comidas (id, nombre) VALUES
 (29, 'Sándwich vegetal'),
 (30, 'Pan con tomate y jamón serrano');
 
--- =====================================
--- INSERTS COMIDAS_ALIMENTOS
--- =====================================
 
 -- 1. Tostadas con aguacate y huevo
 INSERT INTO comidas_alimentos (id_comida, id_alimento, gramos) VALUES
