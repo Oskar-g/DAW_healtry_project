@@ -15,9 +15,9 @@ El proyecto está configurado y dedsarrollado con:
 
 ### 2 Configuración de base de datos
 
-Tienes el esquema de la base de datos con sus create e insert en el fichero healtry.sql localizado en la raiz de este proyecto. 
+Tienes el esquema de la base de datos con sus create e insert en el fichero esquema.sql y datos.sql localizado en la raiz de este proyecto. 
 
-La configuración de conexión a la base de datos se encuentra en:
+La configuración de conexión a la base de datos se encuentra en el proyecto healtryback:
 ```
 src/main/resources/application.yaml
 ```
@@ -33,7 +33,7 @@ Configuración por defecto:
        username: root
        password: root
        driver-class-name: org.mariadb.jdbc.Driver
-   ```
+```
 
    tedrás que modificar el usuario y contraseña seguramente de este fichero para que pueda lanzarse.
 
@@ -42,24 +42,29 @@ Configuración por defecto:
 ### 3 Ejecución del proyecto
 
 Puedes ejecutarlo con maven:
-   ```bash
+```bash
    mvn spring-boot:run
-   ```
+```
    
 O directamente haciendo un run as java project clicando con botón derecho sobre la clase
-   ```
+```bash
    com.oscar.healtry.HealtryApplication
-   ```
+```
+y el front en
+```bash
+  com.oscar.healtry.HealtryFrontApplication
+```
 
-La aplicación se iniciará en el puerto **8080**:
-   ```
+La aplicación se iniciará en el puerto **8080** para el back y 8083 para el front:
+```bash
    http://localhost:8080
-   ```
+   http://localhost:8083
+```
 
 ---
 
 
-## 4 Estructura relevante del proyecto
+## 4.1 Estructura relevante del proyecto back
 
 ```
 healtry/
@@ -71,16 +76,31 @@ healtry/
 │   │   │   ├── dto/                        # objetos de transferencia de datos (POJOS)
 │   │   │   ├── model/                      # Entidades JPA
 │   │   │   ├── repository/                 # Repositorios con Spring Data
-│   │   │   └── service/                    # interfaces de servicios
+│   │   │   ├── service/                    # interfaces de servicios
 │   │   │   └── service/impl                # implementación de la lógica y casos de uso 
 │   │   └── resources/						
-│   │       ├── templates/                  # Plantillas de thymeleaf *
-│   │       ├── static/                     # Recursos estáticos *
 │   │       └── application.yaml            # Config del proyecto
 └── pom.xml                                 # Definición de proyecto con maven
 ```
 
- (*) Estos elementos se eliminarán en versiones posteriores cuando monte un servidor para el frontal, mi idea es que todo esto vaya por rest.
+## 4.2 Estructura relevante del proyecto front
+
+```
+healtry/
+├── src/
+│   ├── main/
+│   │   ├── java/com/oscar/healtry/
+│   │   │   ├── HealtryApplication.java     # Clase main (Aquí va el @SpringBootApplication)
+│   │   │   ├── controller/                 # Controladores de acceso a las páginas 
+│   │   │   ├── dto/                        # objetos de transferencia de datos (POJOS)
+│   │   │   ├── service/                    # interfaces de servicios
+│   │   │   └── service/impl                # implementación de la lógica y casos de uso 
+│   │   └── resources/            
+│   │       ├── templates/                  # Plantillas de thymeleaf
+│   │       ├── static/                     # Recursos estáticos
+│   │       └── application.yaml            # Config del proyecto
+└── pom.xml                                 # Definición de proyecto con maven
+```
 
 ---
 
